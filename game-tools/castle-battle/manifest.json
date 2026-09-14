@@ -1,0 +1,23 @@
+{
+  "source": "sanctuary/delivery/aurelia_rebuilt.blend",
+  "meshCount": 175,
+  "polygonsBeforeTriangulation": 385855,
+  "bytes": 2576292,
+  "coordinateSystem": "glTF right-handed, Y up",
+  "platformHeight": 10,
+  "spawn": [
+    0,
+    10.52,
+    11
+  ],
+  "gardenCenter": [
+    0,
+    10.5,
+    5
+  ],
+  "omitted": [
+    "Blender lights",
+    "Blender cameras",
+    "volume-only fog meshes"
+  ]
+}
