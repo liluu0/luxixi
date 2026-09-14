@@ -1,0 +1,9 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+defineProps({ onBack: Function })
+const metric=ref('人口'), activeCity=ref(null)
+const metrics={人口:['1,412,175','万人'],GDP:['1,217,321','亿元'],旅游热度:['86,420','指数'],房价:['38,640','元/㎡']}
+const cities=[['北京',78,18],['上海',77,53],['广州',69,76],['深圳',74,82],['成都',42,60],['重庆',46,55],['武汉',57,51],['西安',38,40],['杭州',75,59],['南京',69,48],['青岛',69,28],['昆明',37,75],['厦门',76,75]]
+onMounted(()=>window.scrollTo({top:0,behavior:'auto'}))
+</script>
+<template><div class="detail-page"><header class="detail-nav"><button @click="onBack">← 返回作品集</button><span>PROJECT 001 / DATA VISUALIZATION</span><b>LIVE SYSTEM <i/></b></header><main class="dashboard"><div class="dash-title"><div><span class="tag">NATIONAL CITY PULSE / 2025</span><h1>全国城市<br><em>热力数据大屏</em></h1></div><p>一张会呼吸的中国地图<br>把城市的脉搏，变成可见的光。</p></div><div class="tabs"><button v-for="(v,k) in metrics" :key="k" :class="{active:metric===k}" @click="metric=k">{{k}}<small>{{v[1]}}</small></button></div><div class="dash-grid"><section class="map-panel"><div class="panel-head">实时城市热力 <span>● LIVE / {{metric}}</span></div><div class="map"><div class="china-shape">CHINA <small>338 CITIES</small></div><i v-for="c in cities" :key="c[0]" class="pulse" :style="{left:c[1]+'%',top:c[2]+'%'}"><b>{{c[0]}}</b></i></div></section><aside><div class="total"><span>全国总量 · {{metric}}</span><strong>{{metrics[metric][0]}}</strong><em>+6.1% <small>较上月</small></em></div><div class="chart-block"><div class="panel-head">近 12 个月趋势</div><svg viewBox="0 0 500 150" preserveAspectRatio="none"><polyline points="0,120 45,105 90,112 135,84 180,95 225,60 270,72 315,47 360,58 405,25 450,39 500,12" fill="none" stroke="#d8ff36" stroke-width="3"/></svg></div><div class="rank"><div class="panel-head">城市排行 <span>TOP 05</span></div><p v-for="(c,i) in cities.slice(0,5)" :key="c[0]"><b>0{{i+1}}</b><span>{{c[0]}}</span><i :style="{width:(90-i*13)+'%'}"/></p></div></aside></div></main></div></template>
