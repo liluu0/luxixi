@@ -1,0 +1,385 @@
+{
+  "coordinateSystem": "Three.js right-handed Y-up; Blender (x,y,z) becomes (x,z,-y)",
+  "visualAsset": "assets/castle-battle/castle-sanctuary-lite.glb",
+  "arena": {
+    "center": [
+      0,
+      10.5,
+      5
+    ],
+    "radius": 7.65,
+    "minX": -7.65,
+    "maxX": 7.65,
+    "minZ": -2.65,
+    "maxZ": 12.65
+  },
+  "fountainCenter": [
+    0,
+    10.805,
+    5
+  ],
+  "spawn": [
+    0,
+    10.52,
+    11
+  ],
+  "enemySpawns": [
+    [
+      0,
+      10.52,
+      0.7
+    ],
+    [
+      3.04,
+      10.5,
+      1.96
+    ],
+    [
+      4.3,
+      10.5,
+      5.7
+    ],
+    [
+      3.04,
+      10.5,
+      8.04
+    ],
+    [
+      0,
+      10.52,
+      9.3
+    ],
+    [
+      -3.04,
+      10.51,
+      8.04
+    ],
+    [
+      -4.3,
+      10.52,
+      5
+    ],
+    [
+      -3.04,
+      10.5,
+      1.96
+    ]
+  ],
+  "patrolPoints": [
+    [
+      [
+        -0.65,
+        10.51,
+        0.75
+      ],
+      [
+        0.65,
+        10.51,
+        0.75
+      ]
+    ],
+    [
+      [
+        2.65,
+        10.51,
+        1.6
+      ],
+      [
+        3.3,
+        10.51,
+        2.24
+      ]
+    ],
+    [
+      [
+        4.34,
+        10.51,
+        5.35
+      ],
+      [
+        4.16,
+        10.51,
+        6.15
+      ]
+    ],
+    [
+      [
+        3.43,
+        10.51,
+        7.68
+      ],
+      [
+        2.67,
+        10.51,
+        8.38
+      ]
+    ],
+    [
+      [
+        0.65,
+        10.51,
+        9.25
+      ],
+      [
+        -0.65,
+        10.51,
+        9.25
+      ]
+    ],
+    [
+      [
+        -2.67,
+        10.51,
+        8.38
+      ],
+      [
+        -3.43,
+        10.51,
+        7.68
+      ]
+    ],
+    [
+      [
+        -4.25,
+        10.51,
+        5.65
+      ],
+      [
+        -4.25,
+        10.51,
+        4.35
+      ]
+    ],
+    [
+      [
+        -3.43,
+        10.51,
+        2.32
+      ],
+      [
+        -2.67,
+        10.51,
+        1.62
+      ]
+    ]
+  ],
+  "obstacles": [
+    {
+      "id": "cathedral",
+      "type": "box",
+      "position": [
+        -9,
+        16.5,
+        -3
+      ],
+      "size": [
+        9.2,
+        13,
+        12.9
+      ]
+    },
+    {
+      "id": "rotunda",
+      "type": "cylinder",
+      "position": [
+        7,
+        16,
+        -3
+      ],
+      "radius": 4.95,
+      "height": 12
+    },
+    {
+      "id": "rotundaPortal",
+      "type": "box",
+      "position": [
+        7,
+        15,
+        2.75
+      ],
+      "size": [
+        5.6,
+        10,
+        3.8
+      ]
+    },
+    {
+      "id": "westPalace",
+      "type": "box",
+      "position": [
+        -11.75,
+        15,
+        4.3
+      ],
+      "size": [
+        6.2,
+        10,
+        9.4
+      ]
+    },
+    {
+      "id": "northCloister",
+      "type": "box",
+      "position": [
+        -0.85,
+        12,
+        -5.05
+      ],
+      "size": [
+        8.5,
+        4,
+        1.4
+      ]
+    },
+    {
+      "id": "fountain",
+      "type": "cylinder",
+      "position": [
+        0,
+        11.2,
+        5
+      ],
+      "radius": 2.32,
+      "height": 2.4
+    },
+    {
+      "id": "arenaWest",
+      "type": "box",
+      "position": [
+        -8,
+        12,
+        5
+      ],
+      "size": [
+        0.5,
+        5,
+        16.7
+      ]
+    },
+    {
+      "id": "arenaEast",
+      "type": "box",
+      "position": [
+        8,
+        12,
+        5
+      ],
+      "size": [
+        0.5,
+        5,
+        16.7
+      ]
+    },
+    {
+      "id": "arenaNorth",
+      "type": "box",
+      "position": [
+        0,
+        12,
+        -3
+      ],
+      "size": [
+        16.7,
+        5,
+        0.5
+      ]
+    },
+    {
+      "id": "arenaSouth",
+      "type": "box",
+      "position": [
+        0,
+        12,
+        13
+      ],
+      "size": [
+        16.7,
+        5,
+        0.5
+      ]
+    }
+  ],
+  "groundMeshPrefixes": [
+    "Formal Garden | Weathered limestone",
+    "Formal Garden | Carved pale stone",
+    "Natural rock islands | Clipped box hedges",
+    "West Garden Promenade | Weathered limestone",
+    "West Garden Promenade | Carved pale stone",
+    "Armillary Fountain | Carved pale stone",
+    "East Stone Bridge | Weathered limestone"
+  ],
+  "measuredBuildingBounds": {
+    "cathedral": {
+      "min": [
+        -13.58,
+        10,
+        -9.42
+      ],
+      "max": [
+        -4.42,
+        22.2,
+        3.42
+      ]
+    },
+    "rotunda": {
+      "min": [
+        2.04,
+        10,
+        -7.96
+      ],
+      "max": [
+        11.96,
+        21.4,
+        1.96
+      ]
+    },
+    "rotundaPortal": {
+      "min": [
+        3.47,
+        9.95,
+        0.89
+      ],
+      "max": [
+        10.53,
+        22.45,
+        5.11
+      ]
+    },
+    "westPalace": {
+      "min": [
+        -14.73,
+        10,
+        -0.3
+      ],
+      "max": [
+        -8.67,
+        19.93,
+        7.64
+      ]
+    },
+    "garden": {
+      "min": [
+        -7.65,
+        9.75,
+        -2.65
+      ],
+      "max": [
+        7.65,
+        11.98,
+        12.65
+      ]
+    },
+    "gatehouse": {
+      "min": [
+        25.4,
+        5.83,
+        -0.22
+      ],
+      "max": [
+        30.6,
+        24.84,
+        4.22
+      ]
+    }
+  }
+}
