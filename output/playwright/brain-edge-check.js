@@ -1,0 +1,37 @@
+async (page) => {
+  const assert = (ok, message) => { if (!ok) throw new Error(message); };
+  await page.goto('http://127.0.0.1:5180/works/brain-games');
+  await page.locator('.brain-tile').first().waitFor();
+  await page.clock.install();
+  await page.setViewportSize({ width: 375, height: 812 });
+  await page.screenshot({ path: 'output/playwright/brain-mobile.png', fullPage: true });
+  await page.getByRole('button', { name: /01 \/ STROOP/ }).click();
+  assert((await page.locator('.brain-best').innerText()).includes('12 / 12'), 'Reload lost best');
+  await page.getByRole('button', { name: '练习', exact: true }).click();
+  await page.clock.runFor(450);
+  await page.locator('.brain-answers button').first().evaluate(el => { el.click(); el.click(); el.click(); });
+  await page.clock.runFor(600);
+  assert((await page.locator('.brain-metrics').innerText()).includes('2 / 3'), 'Double counting');
+  await page.clock.runFor(12000);
+  assert(await page.getByText('练习完成', { exact: true }).isVisible(), 'Timeout did not complete');
+  await page.getByRole('button', { name: '返回挑战列表' }).click();
+  await page.getByRole('button', { name: /02 \/ MEMORY/ }).click();
+  await page.getByRole('button', { name: '练习', exact: true }).click();
+  await page.clock.runFor(1000);
+  await page.screenshot({ path: 'output/playwright/brain-mobile-memory.png', fullPage: true });
+  const first = await page.locator('.brain-memory .lit').getAttribute('aria-label');
+  await page.clock.runFor(2200);
+  const wrong = first === '方格 1' ? '方格 2' : '方格 1';
+  await page.getByRole('button', { name: wrong, exact: true }).click();
+  assert(await page.getByText('顺序中断', { exact: true }).isVisible(), 'Wrong sequence accepted');
+  await page.getByRole('button', { name: '返回挑战列表' }).click();
+  await page.getByRole('button', { name: /02 \/ MEMORY/ }).click();
+  await page.getByRole('button', { name: '练习', exact: true }).click();
+  await page.clock.runFor(1000);
+  await page.getByRole('button', { name: '返回挑战列表' }).click();
+  await page.clock.runFor(30000);
+  assert(await page.locator('.brain-tile').count() === 3, 'Timer survived exit');
+  await page.setViewportSize({ width: 320, height: 740 });
+  assert(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), '320px overflow');
+  return 'PASS: reload persistence, duplicate input lock, timeout, memory error, exit cleanup, 320px layout.';
+}

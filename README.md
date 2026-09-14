@@ -19,6 +19,8 @@ npm install
 
 ## 页面结构
 
+- `/works/brain-games`：认知小游戏合集，包含颜色判断、顺序记忆和规则反转，支持练习、键盘或鼠标输入与本地最佳成绩。规则、资料来源和验证说明见 [小游戏文档](docs/brain-games.md)。
+
 - `/`：个人首页，包含 Hero、关于我、精选作品和联系方式。
 - `/works/city-heatmap`：城市脉冲实验室，展示省级地图、城市节点、指标切换、热力/流动图层、缩放拖拽和排名面板。
 - `src/components/HomePage.vue`：首页内容和作品卡片。
