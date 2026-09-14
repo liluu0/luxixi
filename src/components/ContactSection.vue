@@ -24,8 +24,8 @@ const submit = () => { previewed.value = true }
       <div class="label">03 / CONTACT</div>
       <h2 id="contact-title">保持联系。</h2>
       <dl class="contact-details">
-        <div><dt>QQ</dt><dd><button class="copy" type="button" @click="copy('3129830832','qq')">3129830832 <span>{{ copied === 'qq' ? '已复制' : '复制' }}</span></button></dd></div>
-        <div><dt>微信</dt><dd><button class="copy" type="button" @click="copy('a15707473356','wechat')">a15707473356 <span>{{ copied === 'wechat' ? '已复制' : '复制' }}</span></button></dd></div>
+        <div><dt>QQ</dt><dd><span>3129830832</span><button class="copy" type="button" @click="copy('3129830832','qq')">{{ copied === 'qq' ? '已复制' : '复制' }}</button></dd></div>
+        <div><dt>微信</dt><dd><span>a15707473356</span><button class="copy" type="button" @click="copy('a15707473356','wechat')">{{ copied === 'wechat' ? '已复制' : '复制' }}</button></dd></div>
         <div><dt>邮箱</dt><dd><a href="mailto:3129830832@qq.com">3129830832@qq.com</a></dd></div>
         <div><dt>博客</dt><dd><a href="https://blog.csdn.net/qq_62541773?type=lately" target="_blank" rel="noopener noreferrer">CSDN 博客 ↗</a></dd></div>
       </dl>
@@ -48,7 +48,7 @@ const submit = () => { previewed.value = true }
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;scroll-margin-top:24px;letter-spacing:0}
 .contact h2{font-size:48px;line-height:1.2;letter-spacing:0;color:var(--orange)}
 .contact-details{margin:40px 0 0}
-.contact-details>div{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;padding:16px 0;border-bottom:1px solid var(--line)}
+.contact-details>div{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;align-items:center;min-height:60px;padding:10px 0;border-bottom:1px solid var(--line)}
 dt{color:#a5a89f}dd{margin:0;overflow-wrap:anywhere}a{color:var(--ink);text-underline-offset:5px}a:hover{color:var(--acid)}
 .contact-form{display:flex;flex-direction:column;min-width:0;gap:12px}
 .contact-form h3{font-size:22px;margin:0 0 16px}
@@ -57,13 +57,12 @@ input,textarea{box-sizing:border-box;width:100%;min-width:0;background:#11150f;b
 input::placeholder,textarea::placeholder{color:#687262;transition:color .25s}input:hover,textarea:hover{border-color:#626f59;background:#141812}input:focus,textarea:focus{border-color:#93a486;background:#151a14;box-shadow:0 0 0 2px #93a48614,0 4px 14px #0003}input:focus::placeholder,textarea:focus::placeholder{color:#899580}
 textarea{resize:vertical;min-height:150px}input:focus-visible,textarea:focus-visible{outline:none}a:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
 button{align-self:flex-start;padding:12px 24px;background:#24291e;border:1px solid #54603d;color:var(--acid);font:inherit;border-radius:4px;cursor:pointer;transition:.25s}button:hover{background:var(--acid);color:#10120d;transform:translateY(-2px)}
-.copy{padding:0;background:none;border:0;color:var(--ink);font:inherit}.copy span{margin-left:12px;color:var(--acid);font-size:10px;opacity:.7}.copy:hover{background:none;color:var(--acid);transform:none}.form-note{color:#687262;font-size:11px;margin:0}
+.copy{padding:5px 8px;background:transparent;border:1px solid transparent;color:var(--acid);font:10px inherit;min-width:48px}.copy:hover{background:#d8ff3618;border-color:#54603d;color:var(--acid);transform:none}.form-note{color:#687262;font-size:11px;margin:0}
 @media(max-width:700px){.contact{grid-template-columns:minmax(0,1fr);gap:48px}.contact h2{font-size:36px}}
 .contact-details>div{transition:background-color .2s,border-color .2s}
 .contact-details>div:hover,.contact-details>div:focus-within{background:#171d15;border-color:var(--acid)}
 .copy-feedback{min-height:24px;color:var(--acid);line-height:1.6}
-.copy{width:100%;text-align:left;min-height:28px;display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap}
-.copy span{min-width:40px;margin:0}
+.copy{width:auto;text-align:center;min-height:28px;display:inline-grid;place-items:center;flex:0 0 auto}
 .message-count{align-self:flex-end;color:#a5a89f;font-size:11px;margin-top:-12px}
 .form-note{color:#a5a89f;line-height:1.8;min-height:40px}
 button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}

@@ -32,3 +32,5 @@
 
 .city-node.minor text{display:none}.city-node.minor:hover text,.city-node.minor.active text{display:block}.region-stats{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:14px;background:var(--lab-line);border:1px solid var(--lab-line)}.region-stats>div{background:#0b1113;padding:10px}.region-stats small{display:block;color:#64736f;font-size:7px;margin-bottom:6px}.region-stats b{font:700 12px "Microsoft YaHei";color:var(--metric)}
 .node-hit{fill:transparent;pointer-events:all}.city-node .node-ring,.city-node .node-core,.city-node text{pointer-events:none}
+
+.availability{transition:color .2s,transform .2s}.availability:hover{color:var(--acid);transform:translateX(-4px)}nav a:after{content:' ↗';opacity:0;transition:.2s}nav a:hover:after{opacity:1}.card h3{transition:transform .3s}.card:hover h3{transform:translateX(7px)}.card .arrow{display:inline-block;transition:transform .3s}.card:hover .arrow{transform:translate(5px,-5px)}
