@@ -1,0 +1,302 @@
+[
+  {
+    "xz": [
+      0,
+      11
+    ],
+    "hits": [
+      {
+        "mesh": "Island vegetation | Alpine foliage",
+        "height": 11.986
+      },
+      {
+        "mesh": "Island vegetation | Clipped box hedges",
+        "height": 11.749
+      },
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.509
+      },
+      {
+        "mesh": "Armillary Fountain | Carved pale stone",
+        "height": 10.5
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.32
+      }
+    ]
+  },
+  {
+    "xz": [
+      0,
+      0.7
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.518
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.876
+      }
+    ]
+  },
+  {
+    "xz": [
+      3.04,
+      1.96
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.497
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.867
+      }
+    ]
+  },
+  {
+    "xz": [
+      4.3,
+      5.7
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.499
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.806
+      }
+    ]
+  },
+  {
+    "xz": [
+      3.04,
+      8.04
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.501
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.899
+      }
+    ]
+  },
+  {
+    "xz": [
+      0,
+      9.3
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.518
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.838
+      }
+    ]
+  },
+  {
+    "xz": [
+      -3.04,
+      8.04
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.502
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.819
+      }
+    ]
+  },
+  {
+    "xz": [
+      -4.3,
+      5
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.518
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.856
+      }
+    ]
+  },
+  {
+    "xz": [
+      -3.04,
+      1.96
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.498
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.88
+      }
+    ]
+  },
+  {
+    "xz": [
+      -5.5,
+      5
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Carved pale stone",
+        "height": 10.512
+      },
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.49
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.46
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.858
+      }
+    ]
+  },
+  {
+    "xz": [
+      5.5,
+      7
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.32
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.782
+      }
+    ]
+  },
+  {
+    "xz": [
+      -5.5,
+      9
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.225
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.18
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.912
+      }
+    ]
+  },
+  {
+    "xz": [
+      5.5,
+      9
+    ],
+    "hits": [
+      {
+        "mesh": "Formal Garden | Clipped box hedges",
+        "height": 10.225
+      },
+      {
+        "mesh": "Formal Garden | Weathered limestone",
+        "height": 10.18
+      },
+      {
+        "mesh": "Natural rock islands | Clipped box hedges",
+        "height": 9.839
+      }
+    ]
+  }
+]
