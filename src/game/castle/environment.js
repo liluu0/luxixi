@@ -3,6 +3,8 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
 import level from './level.json'
+import { createInterior } from './interior.js'
+import { createEntrance } from './entrance.js'
 
 const BASE_URL = import.meta.env.BASE_URL
 const ASSET_URL = `${BASE_URL}assets/castle-battle/castle-sanctuary-lite.glb`
@@ -224,6 +226,7 @@ function obstacleCopies() {
     id: obstacle.id,
     type: obstacle.type,
     position: [...obstacle.position],
+    ...(obstacle.rotation ? { rotation: obstacle.rotation } : {}),
     ...(obstacle.type === 'box' ? { size: [...obstacle.size] } : { radius: obstacle.radius, height: obstacle.height }),
   }))
 }
@@ -275,6 +278,20 @@ export async function loadEnvironment(scene, renderer, onProgress) {
       object.quaternion.identity()
       object.scale.set(1, 1, 1)
     }
+    const materialNames = (Array.isArray(object.material) ? object.material : [object.material])
+      .map(material => sourceName(material).toLowerCase()).join(' ')
+    if (/foliage|hedges|bark/.test(materialNames)) {
+      const geometry = triangleGeometry(object, (a, b, c) => {
+        const x = (a.x + b.x + c.x) / 3
+        const z = (a.z + b.z + c.z) / 3
+        return Math.abs(x - 7) > 1.55 || z < 4.7 || z > 7.9
+      })
+      object.geometry.dispose()
+      object.geometry = geometry
+      object.position.set(0, 0, 0)
+      object.quaternion.identity()
+      object.scale.set(1, 1, 1)
+    }
     object.castShadow = /^(Western cathedral|Grand observatory|Grand rotunda|Armillary Fountain)/.test(name)
     object.receiveShadow = true
     if (Array.isArray(object.material)) object.material.forEach(configureMaterial)
@@ -295,6 +312,12 @@ export async function loadEnvironment(scene, renderer, onProgress) {
   }
   const water = addWater(decoration)
   const environmentTarget = addLighting(scene, renderer, decoration)
+  const interior = createInterior()
+  const entrance = createEntrance()
+  decoration.add(entrance.root)
+  scene.add(interior.root)
+  const outdoor = { background: scene.background, fog: scene.fog }
+  let activeZone = 'courtyard'
 
   const raycaster = new THREE.Raycaster()
   const onGround = (point) => {
@@ -306,16 +329,39 @@ export async function loadEnvironment(scene, renderer, onProgress) {
   let disposed = false
   return {
     model,
+    interior,
+    entrance: [6.7, 10.52, 6.7],
     groundMeshes,
     spawn: onGround(level.spawn),
     enemySpawns: level.enemySpawns.map(onGround),
-    obstacles: obstacleCopies(),
+    obstacles: [
+      ...obstacleCopies(),
+      { id: 'courtyardFoundation', type: 'box', position: [0, 9.9, 5], size: [15.6, 0.42, 15.6] },
+      ...interior.obstacles,
+    ],
+    setZone(zone) {
+      activeZone = zone
+      const inside = zone === 'interior'
+      model.visible = !inside
+      decoration.visible = !inside
+      interior.root.visible = inside
+      scene.background = inside ? new THREE.Color(0x141b22) : outdoor.background
+      scene.fog = inside ? new THREE.Fog(0x2b3540, 18, 65) : outdoor.fog
+      scene.environmentIntensity = inside ? 0.38 : 0.18
+      if (renderer) renderer.toneMappingExposure = inside ? 1.08 : 0.9
+    },
     update(elapsedSeconds) {
-      water.material.normalMap.offset.set(elapsedSeconds * 0.003, elapsedSeconds * 0.0013)
+      if (activeZone === 'interior') interior.update(elapsedSeconds)
+      else {
+        water.material.normalMap.offset.set(elapsedSeconds * 0.003, elapsedSeconds * 0.0013)
+        entrance.update(elapsedSeconds)
+      }
     },
     dispose() {
       if (disposed) return
       disposed = true
+      interior.dispose()
+      entrance.dispose()
       const materials = new Set()
       const disposeObject = (object) => {
         if (!object.isMesh) return

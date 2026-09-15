@@ -18,10 +18,10 @@ async (page) => {
   for (const size of [{ width: 390, height: 844 }, { width: 844, height: 390 }]) {
     await page.setViewportSize(size)
     await page.reload()
-    await page.getByRole('button', { name: '踏入钟庭' }).waitFor()
+    await page.locator('.castle-begin').waitFor()
     await page.waitForTimeout(300)
     await page.screenshot({ path: `output/playwright/castle-ready-${size.width}.png` })
-    await tap('.castle-begin')
+    await page.getByRole('button', { name: /直接挑战|踏入钟庭/, exact: true }).click()
     await page.locator('.castle-joystick').waitFor({ state: 'visible' })
     await page.waitForTimeout(400)
     const before = await snapshot()
