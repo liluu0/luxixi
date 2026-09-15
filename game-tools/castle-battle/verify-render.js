@@ -20,15 +20,16 @@ async (page) => {
   const results = []
   for (const size of [{ width: 1440, height: 900 }, { width: 390, height: 844 }, { width: 844, height: 390 }]) {
     await page.setViewportSize(size)
-    await page.reload()
-    await page.getByRole('button', { name: '踏入钟庭' }).waitFor()
+    const phase = await page.evaluate(() => window.__castleBattle.snapshot().phase)
+    if (phase === 'paused') await page.keyboard.press('p')
     await page.waitForTimeout(400)
     const before = await pixels()
     await page.waitForTimeout(400)
     const after = await pixels()
     if (before.colors < 100 || before.nonblack < .8 || before.checksum === after.checksum) throw new Error(`Blank or static canvas: ${JSON.stringify({ size, before, after })}`)
-    await page.screenshot({ path: `output/playwright/castle-ready-final-${size.width}.png` })
-    results.push({ size, before, after })
+    const zone = await page.evaluate(() => window.__castleBattle.snapshot().zone)
+    await page.screenshot({ path: `output/playwright/v2-${zone}-${size.width}.png` })
+    results.push({ zone, size, before, after })
   }
   return results
 }

@@ -67,6 +67,8 @@ export function createBattleAudio() {
       if (name === 'hit') { tone(140, 0.12, 'triangle', 0.65); rustle(2900, 0.1, 0.35) }
       if (name === 'hurt') tone(65, 0.25, 'sawtooth', 0.24)
       if (name === 'dodge') rustle(700, 0.25, 0.3)
+      if (name === 'jump') rustle(900, 0.14, 0.17)
+      if (name === 'land') { rustle(220, 0.12, 0.23); tone(76, 0.09, 'triangle', 0.1) }
       if (name === 'step') rustle(260, 0.045, 0.12)
       if (name === 'heal') [440, 554, 660].forEach((f, i) => tone(f, 0.5, 'sine', 0.15, i * 0.1))
       if (name === 'kill') { tone(98, 0.35, 'triangle', 0.35); tone(294, 0.4, 'sine', 0.12) }
