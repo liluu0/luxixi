@@ -1,0 +1,37 @@
+async(page)=>{
+ const assert=(ok,msg)=>{if(!ok)throw new Error(msg)};
+ await page.setViewportSize({width:1440,height:1050});
+ await page.goto('http://127.0.0.1:5187/works/city-heatmap');
+ const province=page.getByRole('button',{name:'查看江苏省详情',exact:true});
+ await province.waitFor();
+ const transform=()=>page.locator('.map>svg>g').getAttribute('transform');
+ const initial=await transform();
+ await province.click();
+ assert(await transform()===initial,'First click changed map');
+ assert(await province.getAttribute('aria-pressed')==='true','Not selected');
+ assert((await page.locator('.province-title').innerText()).includes('江苏省'),'Province detail missing');
+ await province.click();
+ assert(await transform()===initial,'Second click changed map');
+ assert(await province.getAttribute('aria-pressed')==='false','Selection not cleared');
+ assert(await page.locator('.land.focused').count()===0,'Highlight remains');
+ assert(await page.locator('.province-title').count()===0,'Province detail remains');
+ assert(await page.getByRole('combobox',{name:'地区筛选'}).inputValue()==='','Filter remains');
+ assert(await page.locator('.node').count()===34,'National nodes not restored');
+ await province.dblclick();
+ assert(await transform()===initial,'Rapid repeated click zoomed');
+ assert(await province.getAttribute('aria-pressed')==='false','Rapid repeat did not clear');
+ await province.focus();await page.keyboard.press('Enter');
+ assert(await transform()===initial,'Keyboard select zoomed');
+ await page.keyboard.press('Space');
+ assert(await province.getAttribute('aria-pressed')==='false','Keyboard toggle failed');
+ await page.getByRole('combobox',{name:'地区筛选'}).selectOption('江苏省');
+ const zoomed=await transform();
+ assert(zoomed!==initial,'Dropdown lost explicit focus');
+ await province.click();
+ assert(await transform()===zoomed,'Deselect changed existing zoom');
+ await province.click();
+ assert(await transform()===zoomed,'Select changed existing zoom');
+ await page.screenshot({path:'output/playwright/pulse-click-toggle.png',fullPage:true});
+ await province.click();
+ assert(await transform()===zoomed,'Second deselect changed zoom');
+}
