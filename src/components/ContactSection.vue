@@ -4,6 +4,8 @@ const copied = ref('')
 const feedback = ref('')
 const message = ref('')
 const previewed = ref(false)
+const contactMode = ref(0)
+const contactModes = ['SIGNAL OPEN', 'READY TO CHAT', 'SEND A WAVE']
 let timer
 const copy = async (value, key) => {
   clearTimeout(timer)
@@ -16,13 +18,15 @@ const copy = async (value, key) => {
 }
 onUnmounted(() => clearTimeout(timer))
 const submit = () => { previewed.value = true }
+const toggleContactMode = () => { contactMode.value = (contactMode.value + 1) % contactModes.length }
 </script>
 <template>
-<section id="contact" class="contact wrap reveal" aria-labelledby="contact-title">
+<section id="contact" class="contact wrap reveal" :class="{ 'contact-ping': contactMode > 0 }" aria-labelledby="contact-title">
     <span class="contact-orbit orbit-one" aria-hidden="true"/><span class="contact-orbit orbit-two" aria-hidden="true"/>
     <div>
       <div class="label">03 / CONTACT</div>
-      <h2 id="contact-title">保持联系。</h2>
+      <div class="contact-title-row"><h2 id="contact-title"><button type="button" class="contact-title-trigger" :class="{ active: contactMode > 0 }" :aria-label="`保持联系，当前状态：${contactModes[contactMode]}，点击切换`" @click="toggleContactMode"><span>保持联系。</span><i aria-hidden="true">↗</i></button></h2><span :key="contactMode" class="contact-badge" aria-hidden="true">{{ contactModes[contactMode].split(' ')[0] }}<br>{{ contactModes[contactMode].split(' ').slice(1).join(' ') }}</span><img class="contact-runner" src="/assets/stickers/01-one-eyed-runner.svg" alt="一只奔跑的独眼小怪"></div>
+      <p :key="contactMode" class="contact-status" role="status">{{ contactModes[contactMode] }} <span>· 点击标题切换</span></p>
       <dl class="contact-details">
         <div><dt>QQ</dt><dd><span>3129830832</span><button class="copy" type="button" @click="copy('3129830832','qq')">{{ copied === 'qq' ? '已复制' : '复制' }}</button></dd></div>
         <div><dt>微信</dt><dd><span>a15707473356</span><button class="copy" type="button" @click="copy('a15707473356','wechat')">{{ copied === 'wechat' ? '已复制' : '复制' }}</button></dd></div>
@@ -32,7 +36,7 @@ const submit = () => { previewed.value = true }
       <p class="copy-feedback" role="status">{{ feedback }}</p>
     </div>
     <form class="contact-form" @submit.prevent="submit">
-      <h3>给我留言</h3>
+      <div class="form-heading"><h3>给我留言</h3><span aria-hidden="true">// DROP A NOTE ✦</span></div>
       <label for="visitor-name">留言人</label>
       <input id="visitor-name" name="visitorName" autocomplete="name" maxlength="80" placeholder="你的名字">
       <label for="visitor-message">留言内容</label>
@@ -46,7 +50,8 @@ const submit = () => { previewed.value = true }
 
 <style scoped>
 .contact{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:64px;scroll-margin-top:24px;letter-spacing:0}
-.contact h2{font-size:48px;line-height:1.2;letter-spacing:0;color:var(--orange)}
+.contact h2{font-size:48px;line-height:1.2;letter-spacing:0;color:var(--orange)}.contact-title-trigger{display:inline-flex;align-items:center;gap:10px;padding:0;background:transparent;border:0;color:var(--orange);font:inherit;cursor:pointer;transition:transform .3s,color .25s}.contact-title-trigger i{font-style:normal;font-size:18px;color:var(--acid);opacity:0;transform:translate(-8px,8px) rotate(-20deg);transition:opacity .25s,transform .3s}.contact-title-trigger:hover,.contact-title-trigger.active{color:var(--acid);transform:translate(5px,-3px) rotate(-2deg)}.contact-title-trigger:hover i,.contact-title-trigger.active i{opacity:1;transform:translate(0,0) rotate(0)}.contact-status{min-height:18px;margin:7px 0 0;color:var(--acid);font-size:9px;letter-spacing:.08em;opacity:.8}.contact-status span{color:#687262}.contact-ping .contact-status{animation:contact-status-pop .45s cubic-bezier(.2,.9,.25,1.4)}
+.contact-title-row{display:flex;align-items:flex-start;gap:18px}.contact-badge{display:inline-grid;place-items:center;width:54px;height:54px;border:1px solid var(--acid);border-radius:50%;color:var(--acid);font-size:8px;line-height:1.2;text-align:center;transform:rotate(9deg);animation:contact-badge-pulse 2.8s ease-in-out infinite}.contact-ping .contact-badge{animation:contact-badge-ping .6s cubic-bezier(.2,.9,.25,1.4),contact-badge-pulse 2.8s ease-in-out .6s infinite}.form-heading{display:flex;align-items:baseline;justify-content:space-between;gap:12px}.form-heading>span{color:var(--pink);font-size:9px;transform:rotate(-4deg)}
 .contact-details{margin:40px 0 0}
 .contact-details>div{display:grid;grid-template-columns:56px minmax(0,1fr);gap:16px;align-items:center;min-height:60px;padding:10px 0;border-bottom:1px solid var(--line)}
 dt{color:#a5a89f}dd{margin:0;overflow-wrap:anywhere}a{color:var(--ink);text-underline-offset:5px}a:hover{color:var(--acid)}
@@ -59,16 +64,19 @@ textarea{resize:vertical;min-height:150px}input:focus-visible,textarea:focus-vis
 button{align-self:flex-start;padding:12px 24px;background:#24291e;border:1px solid #54603d;color:var(--acid);font:inherit;border-radius:4px;cursor:pointer;transition:.25s}button:hover{background:var(--acid);color:#10120d;transform:translateY(-2px)}
 .copy{padding:5px 8px;background:transparent;border:1px solid transparent;color:var(--acid);font:10px inherit;min-width:48px}.copy:hover{background:#d8ff3618;border-color:#54603d;color:var(--acid);transform:none}.form-note{color:#687262;font-size:11px;margin:0}
 @media(max-width:700px){.contact{grid-template-columns:minmax(0,1fr);gap:48px}.contact h2{font-size:36px}}
-.contact-details>div{transition:background-color .2s,border-color .2s}
-.contact-details>div:hover,.contact-details>div:focus-within{background:#171d15;border-color:var(--acid)}
+.contact-details>div{position:relative;transition:background-color .2s,border-color .2s,transform .25s}.contact-details>div:before{content:"";position:absolute;left:0;bottom:-1px;width:0;height:2px;background:var(--acid);box-shadow:0 0 12px var(--acid);transition:width .45s cubic-bezier(.2,.8,.2,1)}.contact-details>div:after{content:"";position:absolute;right:0;bottom:-2px;width:5px;height:5px;border-radius:50%;background:var(--pink);opacity:0;transform:translateX(-30px);transition:opacity .2s,transform .45s cubic-bezier(.2,.8,.2,1)}.contact-details>div:hover,.contact-details>div:focus-within{background:#171d15;border-color:var(--acid);transform:translateX(5px)}.contact-details>div:hover:before,.contact-details>div:focus-within:before{width:100%}.contact-details>div:hover:after,.contact-details>div:focus-within:after{opacity:1;transform:translateX(0)}
 .copy-feedback{min-height:24px;color:var(--acid);line-height:1.6}
 .copy{width:auto;text-align:center;min-height:28px;display:inline-grid;place-items:center;flex:0 0 auto}
 .message-count{align-self:flex-end;color:#a5a89f;font-size:11px;margin-top:-12px}
 .form-note{color:#a5a89f;line-height:1.8;min-height:40px}
 button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
+.contact-title-trigger:hover,.contact-title-trigger:focus-visible,.contact-title-trigger.active{background:transparent;color:var(--acid);transform:translate(5px,-3px) rotate(-2deg)}
+.contact-title-trigger:focus-visible{outline:2px solid var(--acid);outline-offset:7px}
 .contact{position:relative;overflow:hidden}
 .contact-orbit{position:absolute;border:1px solid #31422d;border-radius:50%;pointer-events:none;opacity:.5}.orbit-one{width:180px;height:180px;right:8%;top:8%;animation:orbit 16s linear infinite}.orbit-two{width:90px;height:90px;right:18%;top:22%;border-color:#546d2d;animation:orbit 10s linear reverse infinite}.orbit-two:after{content:"";position:absolute;width:6px;height:6px;background:var(--acid);border-radius:50%;top:-3px;left:50%;box-shadow:0 0 14px var(--acid)}
 @keyframes orbit{to{transform:rotate(360deg)}}
-@media(prefers-reduced-motion:reduce){.contact-orbit{animation:none}}
+@keyframes contact-badge-pulse{50%{box-shadow:0 0 0 7px #d8ff3610,0 0 20px #d8ff3630;transform:rotate(-4deg) scale(1.04)}}
+@keyframes contact-badge-ping{0%{transform:scale(.82) rotate(-12deg);box-shadow:0 0 0 0 #d8ff3680}70%{transform:scale(1.18) rotate(8deg);box-shadow:0 0 0 18px #d8ff3600}100%{transform:scale(1) rotate(0)}}@keyframes contact-status-pop{0%{opacity:0;transform:translateY(-6px)}100%{opacity:.8;transform:none}}
+@media(prefers-reduced-motion:reduce){.contact-orbit,.contact-badge{animation:none}}
 @media(prefers-reduced-motion:reduce){button,.contact-details>div{transition:none}button:hover{transform:none}}
 </style>
