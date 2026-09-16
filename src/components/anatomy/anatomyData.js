@@ -1,3 +1,4 @@
+import { getModelResponse } from './modelCache'
 export const DATA_ROOT = '/assets/anatomy/'
 
 export const SYSTEMS = [
@@ -59,7 +60,7 @@ export function searchIndex(index, query) {
 }
 
 export async function loadChunk(chunk, signal) {
-  const response = await fetch(DATA_ROOT + chunk.gzip.split('/').pop(), { signal })
+  const response = await getModelResponse(chunk.gzip.split('/').pop(), { signal })
   if (!response.ok) throw new Error('模型数据加载失败，请重试。')
   let buffer = await response.arrayBuffer()
   const bytes = new Uint8Array(buffer, 0, Math.min(2, buffer.byteLength))

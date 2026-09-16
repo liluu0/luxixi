@@ -5,6 +5,7 @@ import ContactSection from './ContactSection.vue'
 import WorkCover from './WorkCover.vue'
 import VisualGallery from './VisualGallery.vue'
 import { prepareWorkPagesWhenIdle } from '../workPageLoaders'
+import { prepareAnatomyModel } from './anatomy/modelCache'
 defineProps({
   onOpen: Function,
   onOpenAnatomy: Function,
@@ -21,6 +22,9 @@ const pokeSticker = () => { stickerMood.value = (stickerMood.value + 1) % moods.
 let observer
 let pointerFrame
 let stopWorkPreparation
+let stopModelPreparation
+onMounted(() => { stopModelPreparation = prepareAnatomyModel() })
+onUnmounted(() => { stopModelPreparation?.() })
 onMounted(() => { stopWorkPreparation = prepareWorkPagesWhenIdle() })
 onUnmounted(() => { stopWorkPreparation?.() })
 const moveHero = (event) => {

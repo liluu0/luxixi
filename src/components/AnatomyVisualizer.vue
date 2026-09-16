@@ -2,10 +2,12 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, shallowRef, watch } from 'vue'
 import { ArrowLeft, ArrowRight, Activity, Box, Brain, Check, ChevronRight, Crosshair, Download, Eye, Focus, Heart, Info, Layers3, LoaderCircle, Maximize, Minus, Pause, Play, Plus, RotateCcw, ScanLine, Search, Settings2, Sparkles, UserRound, X } from 'lucide-vue-next'
 import { buildIndex, DATA_ROOT, LANDMARKS, PRESETS, searchIndex, SYSTEMS } from './anatomy/anatomyData'
+import { loadAtlas } from './anatomy/modelCache'
 
 const props = defineProps({ onBack: Function })
 const host = ref(null), atlas = shallowRef(null), catalog = shallowRef(null)
 const loading = ref(true), progress = ref(0), error = ref(''), hover = shallowRef(null)
+const attributionOpen = ref(false)
 const visible = ref([...PRESETS[0].systems]), preset = ref('body'), tab = ref('layers')
 const selection = shallowRef(null), isolated = ref(false), explode = ref(0)
 const mode = ref('solid'), clip = ref(false), clipPosition = ref(0), scan = ref(true), rotate = ref(false)
@@ -106,12 +108,10 @@ async function initialize() {
   request = new AbortController()
   loading.value = true; error.value = ''; progress.value = 0
   try {
-    const [response, module] = await Promise.all([
-      fetch(DATA_ROOT + 'atlas.json', { signal: request.signal }),
+    const [data, module] = await Promise.all([
+      loadAtlas(request.signal),
       import('./anatomy/createAnatomyScene'),
     ])
-    if (!response.ok) throw new Error('图谱索引加载失败，请重试。')
-    const data = await response.json()
     if (disposed || run !== generation) return
     atlas.value = data
     catalog.value = buildIndex(data)
@@ -251,7 +251,26 @@ onUnmounted(() => { disposed = true; generation++; request?.abort(); scene?.disp
         <p>BodyParts3D, © The Database Center for Life Science licensed under CC Attribution 4.0 International.</p>
         <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/download.html" target="_blank" rel="noreferrer">BodyParts3D 官方数据<ArrowRight :size="14" /></a>
         <a href="https://github.com/ashemag/human-atlas" target="_blank" rel="noreferrer">Human Atlas · 浏览器几何打包<ArrowRight :size="14" /></a>
-        <a href="/assets/anatomy/ATTRIBUTION.md" target="_blank" rel="noreferrer">署名与数据处理说明<ArrowRight :size="14" /></a>
+        <div class="source-attribution">
+          <button class="attribution-toggle" type="button" :aria-expanded="attributionOpen" aria-controls="attribution-details" @click="attributionOpen = !attributionOpen">
+            署名与数据处理说明<ChevronRight :size="14" :class="{ expanded: attributionOpen }" />
+          </button>
+          <div id="attribution-details" class="attribution-reveal" :class="{ expanded: attributionOpen }" :inert="!attributionOpen" :aria-hidden="!attributionOpen">
+          <div class="attribution-clip"><div class="attribution-content">
+            <h3>来源与许可</h3>
+            <p>BodyParts3D 4.0，© The Database Center for Life Science，采用 CC BY 4.0 国际许可。源几何文件为 isa_BP3D_4.0_obj_99.zip；英文名称和结构关系来自同一数据集的 IS-A、PART-OF 概念与包含关系表。</p>
+            <a href="https://dbarchive.biosciencedbc.jp/en/bodyparts3d/lic.html" target="_blank" rel="noopener noreferrer">官方许可说明（2025-02-27 更新）<ArrowRight :size="14" /></a>
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0 许可条款<ArrowRight :size="14" /></a>
+            <h3>数据处理</h3>
+            <p>模型由毫米 / Z 轴向上转换为米 / Y 轴向上，并平移至展示台。几何使用 meshoptimizer 简化，每个结构的相对误差上限为 0.2%；法线量化为有符号 16 位数据，几何打包为二进制分块，并配置展示系统分组与颜色。</p>
+            <p>保留全部 2,234 个源网格的对应结构，组合层级包含 3,432 个命名 FMA 概念，一个概念可能关联多个网格。原始来源标识保存在图谱清单中。</p>
+            <p>源 OBJ 注释包含旧版 CC BY-SA 2.1 Japan 许可文字；本作品依据上述官方数据库当前公布的 CC BY 4.0 许可使用数据。</p>
+            <h3>参考与适用范围</h3>
+            <p>参考解剖基于 TARO MRI 与解剖插图修订，不涵盖所有人体结构及个体差异，仅用于教育展示。</p>
+            <a href="https://doi.org/10.1093/nar/gkn613" target="_blank" rel="noopener noreferrer">Mitsuhashi 等（2009）· BodyParts3D 论文<ArrowRight :size="14" /></a>
+          </div></div>
+          </div>
+        </div>
         <small>参考图谱不代表个体差异，不用于临床诊断。搜索与导览由本地图谱索引驱动。</small>
       </div>
     </div>
@@ -259,6 +278,20 @@ onUnmounted(() => { disposed = true; generation++; request?.abort(); scene?.disp
 </template>
 
 <style scoped>
+.source-attribution{border-bottom:1px solid #36514b}
+.source-attribution .attribution-toggle{display:flex;align-items:center;justify-content:space-between;width:100%;padding:14px 0;color:var(--mint);background:none;border:0;cursor:pointer;font-size:11px;text-align:left}
+.attribution-toggle:focus-visible{outline:2px solid var(--mint);outline-offset:3px}
+.attribution-toggle svg{transition:transform .32s ease}
+.attribution-toggle svg.expanded{transform:rotate(90deg)}
+.attribution-reveal{display:grid;grid-template-rows:0fr;opacity:0;transition:grid-template-rows .38s cubic-bezier(.22,.75,.18,1),opacity .28s ease}
+.attribution-reveal.expanded{grid-template-rows:1fr;opacity:1}
+.attribution-clip{min-height:0;overflow:hidden}
+.attribution-content{transform:translateY(-6px);transition:transform .38s cubic-bezier(.22,.75,.18,1)}
+.attribution-reveal.expanded .attribution-content{transform:translateY(0)}
+@media(prefers-reduced-motion:reduce){.attribution-reveal,.attribution-content,.attribution-toggle svg{transition:none}}
+.attribution-content{padding:0 0 14px}
+.attribution-content h3{font-size:13px;margin:18px 0 8px}
+.attribution-content p{overflow-wrap:anywhere}
 .anatomy-lab{--surface:#0b1115;--panel:#10191d;--line:#29353a;--muted:#839295;--text:#e8f1ed;--mint:#82e8cf;--yellow:#e1eb9b;--rose:#dc8883;background:var(--surface);color:var(--text);height:100dvh;overflow:hidden;font:12px/1.5 "Microsoft YaHei","PingFang SC",sans-serif;letter-spacing:0;color-scheme:dark}
 .anatomy-lab *{box-sizing:border-box;letter-spacing:0}
 .anatomy-lab button,.anatomy-lab input{font:inherit}

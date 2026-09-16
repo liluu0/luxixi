@@ -89,6 +89,8 @@ npm ci
 
 素材说明见 [人体图谱 README](public/assets/anatomy/README.md)，许可与改编信息见 [ATTRIBUTION](public/assets/anatomy/ATTRIBUTION.md)。
 
+首页后台预取、模型版本缓存及更新步骤见 [人体图谱加载说明](docs/anatomy-loading.md)。
+
 ### 湖心圣殿 · 3D 建模
 
 湖心圣殿的模型来源、导出方式与实时材质适配说明见 [三维作品文档](docs/lake-sanctuary.md)。
