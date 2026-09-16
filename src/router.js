@@ -1,8 +1,7 @@
 import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './components/HomePage.vue'
-import CityHeatmap from './components/CityHeatmap.vue'
-import AnatomyVisualizer from './components/AnatomyVisualizer.vue'
+import { loadCityHeatmap, loadAnatomyVisualizer } from './workPageLoaders'
 
 const BrainGames = defineAsyncComponent(() => import('./components/BrainGames.vue'))
 const CastleBattle = defineAsyncComponent(() => import('./components/CastleBattle.vue'))
@@ -34,13 +33,13 @@ const router = createRouter({
     {
       path: routePaths.cityHeatmap,
       name: 'city-heatmap',
-      component: CityHeatmap,
+      component: loadCityHeatmap,
       props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
     },
     {
       path: routePaths.anatomyVisualizer,
       name: 'anatomy-visualizer',
-      component: AnatomyVisualizer,
+      component: loadAnatomyVisualizer,
       props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
     },
     {

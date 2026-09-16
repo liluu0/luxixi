@@ -4,6 +4,7 @@ import ComingSoonDialog from './ComingSoonDialog.vue'
 import ContactSection from './ContactSection.vue'
 import WorkCover from './WorkCover.vue'
 import VisualGallery from './VisualGallery.vue'
+import { prepareWorkPagesWhenIdle } from '../workPageLoaders'
 defineProps({
   onOpen: Function,
   onOpenAnatomy: Function,
@@ -19,6 +20,9 @@ const moods = ['AWAKE', 'POKE AGAIN', 'HUH?']
 const pokeSticker = () => { stickerMood.value = (stickerMood.value + 1) % moods.length }
 let observer
 let pointerFrame
+let stopWorkPreparation
+onMounted(() => { stopWorkPreparation = prepareWorkPagesWhenIdle() })
+onUnmounted(() => { stopWorkPreparation?.() })
 const moveHero = (event) => {
   if (!hero.value || !matchMedia('(pointer:fine)').matches) return
   cancelAnimationFrame(pointerFrame)

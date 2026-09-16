@@ -23,6 +23,7 @@ const direction = ref(1)
 const cursor = ref({ x: 0, y: 0 })
 const current = computed(() => slides[active.value])
 let intersection, resize, gesture
+let firstPaintFrame, preloadFrame
 const sizes = '(max-width: 700px) calc(100vw - 32px), (max-width: 900px) 360px, (max-width: 1600px) 40vw, 640px'
 const src = (slide, i, size = 'desktop') => `/assets/visual-gallery/${slide.file}-${size}.webp${attempts.value[i] ? `?retry=${attempts.value[i]}` : ''}`
 const srcset = (slide, i) => `${src(slide, i, 'mobile')} 768w, ${src(slide, i)} 1280w`
@@ -86,8 +87,11 @@ onMounted(() => {
       requested.value[active.value] = true
       intersection.disconnect()
     }
-  }, { rootMargin: '800px 0px' })
-  intersection.observe(section.value)
+  }, { threshold: 0.01 })
+  // Allow a homepage paint before starting image discovery and decoding.
+  firstPaintFrame = requestAnimationFrame(() => {
+    preloadFrame = requestAnimationFrame(() => intersection.observe(section.value))
+  })
   resize = new ResizeObserver(() => {
     const cards = viewport.value.querySelectorAll('.gallery-slide')
     const first = cards[0].getBoundingClientRect()
@@ -97,7 +101,12 @@ onMounted(() => {
   })
   resize.observe(viewport.value)
 })
-onUnmounted(() => { intersection?.disconnect(); resize?.disconnect() })
+onUnmounted(() => {
+  cancelAnimationFrame(firstPaintFrame)
+  cancelAnimationFrame(preloadFrame)
+  intersection?.disconnect()
+  resize?.disconnect()
+})
 </script>
 
 <template>

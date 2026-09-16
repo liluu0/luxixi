@@ -1,1 +1,35 @@
-<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>LUXIXI / 露西西</title></head><body><div id="app"></div><script type="module" src="/src/main.js"></script></body></html>
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="theme-color" content="#0d0e0d">
+    <title>LUXIXI / 露西西</title>
+    <style>
+      html,body{margin:0;background:#0d0e0d;color:#f1efe7}
+      #startup{box-sizing:border-box;min-height:100svh;padding:24px max(16px,6vw);font:13px/1.8 monospace;background:linear-gradient(#262a2533 1px,transparent 1px),linear-gradient(90deg,#262a2533 1px,transparent 1px);background-size:80px 80px}
+      #startup .startup-brand{color:#d8ff36;font-weight:bold;font-size:24px}
+      #startup .startup-intro{padding-top:clamp(90px,18vh,200px)}
+      #startup h1{font:800 clamp(64px,12vw,160px)/1.1 sans-serif;margin:24px 0}
+      #startup h1 span{display:block;color:transparent;-webkit-text-stroke:1px #f1efe7;padding-left:8vw}
+      #startup p{color:#a5a89f;max-width:340px}
+      #startup-status{margin-top:36px;color:#d8ff36!important;font-size:11px}
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      <!-- Visible from HTML alone; no scripts, fonts or images required. -->
+      <main id="startup" aria-label="露西西个人作品集">
+        <div class="startup-brand">LUXIXI ✳</div>
+        <div class="startup-intro">
+          <p>/ 自由创作者</p>
+          <h1>露<span>西西</span></h1>
+          <p>我把好奇心做成可玩的东西。<br>动画、三维、交互和一点点不合时宜的想象。</p>
+          <p id="startup-status" role="status">正在准备互动内容…</p>
+          <noscript>请启用 JavaScript 以浏览互动作品。</noscript>
+        </div>
+      </main>
+    </div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
