@@ -75,7 +75,8 @@ button{align-self:flex-start;padding:12px 24px;background:#24291e;border:1px sol
 .copy-feedback{min-height:24px;color:var(--acid);line-height:1.6}
 .copy{width:auto;text-align:center;min-height:28px;display:inline-grid;place-items:center;flex:0 0 auto}
 .message-count{align-self:flex-end;color:#a5a89f;font-size:11px;margin-top:-12px}
-.form-note{color:#a5a89f;line-height:1.8;min-height:40px}
+.contact-form > button[type="submit"]{align-self:center}
+.form-note{color:#a5a89f;line-height:1.8;min-height:40px;text-align:center}
 button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
 .contact-title-trigger:hover,.contact-title-trigger:focus-visible,.contact-title-trigger.active{background:transparent;color:var(--acid);transform:translate(5px,-3px) rotate(-2deg)}
 .contact-title-trigger:focus-visible{outline:2px solid var(--acid);outline-offset:7px}
@@ -105,4 +106,9 @@ button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
 @keyframes runner-hello{0%,100%{transform:translateY(0) rotate(-7deg)}35%{transform:translate(-5px,-15px) rotate(8deg)}70%{transform:translate(3px,-5px) rotate(-12deg)}}
 @media(max-width:700px){.contact h2{font-size:clamp(27px,7.2vw,36px)}.contact-title-row{gap:14px}.runner-button{width:82px;height:78px;top:50px}.contact-details{margin-top:65px}}
 @media(prefers-reduced-motion:reduce){.contact-word,.runner-button>span{transition:none}.runner-button .contact-runner,.runner-button:hover .contact-runner,.runner-button:focus-visible .contact-runner,.runner-button.playing .contact-runner{animation:none}.contact-title-trigger:hover .contact-word,.contact-title-trigger:focus-visible .contact-word,.contact-title-trigger.greeting .contact-word{transform:none}}
+@media (max-width: 700px) {
+  .contact-title-row .contact-badge {
+    display: none;
+  }
+}
 </style>

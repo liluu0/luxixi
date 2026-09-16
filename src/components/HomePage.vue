@@ -200,5 +200,31 @@ onUnmounted(()=>observer?.disconnect())
 .works-lettering:hover span:nth-child(3){transform:translateY(-3px) rotate(5deg)}
 @media(max-width:700px){.works-lettering{font-size:clamp(40px,12vw,60px)}}
 @media(prefers-reduced-motion:reduce){.works-lettering span{transition:none}.works-lettering:hover span{transform:none}}
-</style>
 
+.about {
+  padding-block: 110px;
+}
+
+@media (max-width: 700px) {
+  .about {
+    padding-block: 80px;
+  }
+
+  .hero .sticker-eye,
+  .hero .sticker-ticket,
+  .copy .mini-sticker-note {
+    display: none;
+  }
+
+  /* Extend the backdrop to both edges while keeping the content gutter. */
+  .hero.wrap {
+    width: 100%;
+    padding-inline: 16px;
+  }
+
+  .hero .scroll {
+    left: 16px;
+  }
+
+}
+</style>
