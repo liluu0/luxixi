@@ -12,6 +12,7 @@ const section = ref(null)
 const viewport = ref(null)
 const active = ref(0)
 const enabled = ref(false)
+const requested = ref(slides.map(() => false))
 const states = ref(slides.map(() => 'loading'))
 const attempts = ref(slides.map(() => 0))
 const offset = ref(0)
@@ -22,8 +23,26 @@ const direction = ref(1)
 const cursor = ref({ x: 0, y: 0 })
 const current = computed(() => slides[active.value])
 let intersection, resize, gesture
-const src = (slide, i) => `/assets/visual-gallery/${slide.file}.webp${attempts.value[i] ? `?retry=${attempts.value[i]}` : ''}`
-const go = (index) => { active.value = Math.max(0, Math.min(slides.length - 1, index)); offset.value = 0 }
+const sizes = '(max-width: 700px) calc(100vw - 32px), (max-width: 900px) 360px, (max-width: 1600px) 40vw, 640px'
+const src = (slide, i, size = 'desktop') => `/assets/visual-gallery/${slide.file}-${size}.webp${attempts.value[i] ? `?retry=${attempts.value[i]}` : ''}`
+const srcset = (slide, i) => `${src(slide, i, 'mobile')} 768w, ${src(slide, i)} 1280w`
+// Mount only the current request. Its completion starts the next background
+// image, using the same responsive <picture> that will display it (no double fetch).
+function prefetchNext() {
+  if (!enabled.value || requested.value.some((value, i) => value && states.value[i] === 'loading')) return
+  const next = requested.value.findIndex(value => !value)
+  if (next !== -1) requested.value[next] = true
+}
+function complete(i, status) {
+  states.value[i] = status
+  prefetchNext()
+}
+const go = (index) => {
+  active.value = Math.max(0, Math.min(slides.length - 1, index))
+  offset.value = 0
+  // Explicit navigation takes priority over sequential background preparation.
+  if (enabled.value) requested.value[active.value] = true
+}
 const retry = (i) => { states.value[i] = 'loading'; attempts.value[i]++ }
 const settle = () => { gesture = null; dragging.value = false; offset.value = 0 }
 function down(event) {
@@ -62,8 +81,12 @@ function key(event) {
 }
 onMounted(() => {
   intersection = new IntersectionObserver(entries => {
-    if (entries.some(entry => entry.isIntersecting)) { enabled.value = true; intersection.disconnect() }
-  }, { rootMargin: '400px' })
+    if (entries.some(entry => entry.isIntersecting)) {
+      enabled.value = true
+      requested.value[active.value] = true
+      intersection.disconnect()
+    }
+  }, { rootMargin: '800px 0px' })
   intersection.observe(section.value)
   resize = new ResizeObserver(() => {
     const cards = viewport.value.querySelectorAll('.gallery-slide')
@@ -86,7 +109,23 @@ onUnmounted(() => { intersection?.disconnect(); resize?.disconnect() })
     <div ref="viewport" class="gallery-viewport" :class="{ dragging, 'has-cursor': hovering }" tabindex="0" aria-label="四幅视觉作品，使用左右方向键切换" @keydown="key" @pointerdown="down" @pointermove="move" @pointerup="up" @pointercancel="settle" @lostpointercapture="settle" @pointerleave="hovering = false">
       <div class="gallery-track" :style="{ transform: `translate3d(${ center - active * step + offset }px,0,0)` }">
         <figure v-for="(slide, slot) in slides" :key="slot" class="gallery-slide" :class="{ ready: states[slot] === 'ready' }" :aria-hidden="slot !== active" role="group" aria-roledescription="幻灯片" :aria-label="`${slot + 1} / 4：${slide.title}`">
-          <img v-if="enabled" :key="attempts[slot]" :src="src(slide, slot)" :alt="slide.alt" width="1536" height="1024" decoding="async" draggable="false" @load="states[slot] = 'ready'" @error="states[slot] = 'error'">
+          <picture v-if="requested[slot]" :key="attempts[slot]">
+            <source media="(max-width: 700px)" :srcset="`${src(slide, slot, 'mobile')} 768w`" :sizes="sizes">
+            <img
+              :src="src(slide, slot)"
+              :srcset="srcset(slide, slot)"
+              :sizes="sizes"
+              :fetchpriority="slot === active ? 'high' : 'low'"
+              loading="eager"
+              :alt="slide.alt"
+              width="1280"
+              height="853"
+              decoding="async"
+              draggable="false"
+              @load="complete(slot, 'ready')"
+              @error="complete(slot, 'error')"
+            >
+          </picture>
           <div v-if="states[slot] === 'loading'" class="gallery-loading" role="status" :aria-label="`正在加载${slide.title}`"><i/><i/><i/></div>
           <div v-if="states[slot] === 'error'" class="gallery-error"><span>画面暂未加载</span><button type="button" :tabindex="slot === active ? 0 : -1" @click.stop="retry(slot)">重新加载</button></div>
           <span class="frame-number" aria-hidden="true">FRAME / 0{{ slot + 1 }}</span>
