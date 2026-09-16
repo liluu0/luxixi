@@ -12,6 +12,7 @@
 | 城市热力脉冲实验室 | `/works/city-heatmap` | 地图分层、指标筛选、地区档案、城市对比与 CSV 导出 |
 | 灰烬钟庭 · 古堡战斗 | `/works/castle-battle` | 单人三维战斗，庭院与室内探索、教学与触屏操作 |
 | 人体结构分解可视化 | `/works/anatomy-visualizer` | BodyParts3D 图谱、系统图层、结构搜索与三维观察 |
+| 湖心圣殿 · 3D 建模 | `/works/lake-sanctuary` | Aurelia Sanctuary V3、四个视角、自由观察、线框与原始渲染对照 |
 | 给大脑找点麻烦 | `/works/brain-games` | 颜色判断、顺序记忆、规则反转三种挑战 |
 | 虚构物种档案 / 更多正在生成 | 首页作品卡片 | 展示筹备中弹窗，尚无独立作品页面 |
 
@@ -81,6 +82,10 @@ npm ci
 - 用于教育展示，不包含患者数据，不用于临床测量。
 
 素材说明见 [人体图谱 README](public/assets/anatomy/README.md)，许可与改编信息见 [ATTRIBUTION](public/assets/anatomy/ATTRIBUTION.md)。
+
+### 湖心圣殿 · 3D 建模
+
+湖心圣殿的模型来源、导出方式与实时材质适配说明见 [三维作品文档](docs/lake-sanctuary.md)。
 
 ### 给大脑找点麻烦
 

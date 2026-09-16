@@ -13,6 +13,7 @@ export const routePaths = {
   anatomyVisualizer: '/works/anatomy-visualizer',
   castleBattle: '/works/castle-battle',
   brainGames: '/works/brain-games',
+  lakeSanctuary: '/works/lake-sanctuary',
 }
 
 const router = createRouter({
@@ -27,6 +28,7 @@ const router = createRouter({
         onOpenAnatomy: () => router.push({ name: 'anatomy-visualizer' }),
         onOpenCastle: () => router.push({ name: 'castle-battle' }),
         onOpenBrain: () => router.push({ name: 'brain-games' }),
+        onOpenSanctuary: () => router.push({ name: 'lake-sanctuary' }),
       },
     },
     {
@@ -53,9 +55,14 @@ const router = createRouter({
       component: BrainGames,
       props: { onBack: () => router.push({ name: 'home' }) },
     },
+    {
+      path: routePaths.lakeSanctuary,
+      name: 'lake-sanctuary',
+      component: () => import('./components/LakeSanctuary.vue'),
+    },
     { path: '/:pathMatch(.*)*', redirect: routePaths.home },
   ],
-  scrollBehavior: () => ({ left: 0, top: 0 }),
+  scrollBehavior: to => to.hash ? { el: to.hash, top: 24 } : { left: 0, top: 0 },
 })
 
 export default router

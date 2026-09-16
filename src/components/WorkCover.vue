@@ -1,10 +1,11 @@
 <script setup>
+import { previewUrl } from './sanctuary/assets'
 defineProps({ kind: { type: String, required: true } })
 </script>
 
 <template>
   <div class="work-cover" :class="`cover-${kind}`" aria-hidden="true">
-    <svg viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <img v-if="kind === 'temple'" class="temple-render" :src="previewUrl" alt="" loading="lazy"><svg v-else viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g class="cover-guides" stroke="currentColor" stroke-width=".6" opacity=".15">
         <path v-for="n in 12" :key="`v${n}`" :d="`M${n * 60} 0V440`" />
         <path v-for="n in 7" :key="`h${n}`" :d="`M0 ${n * 60}H700`" />
@@ -39,20 +40,6 @@ defineProps({ kind: { type: String, required: true } })
           <path :d="`M${point[0]} ${point[1]}v-${24 + i * 4}`" stroke="#d8ff36" stroke-width="2" />
         </g>
         <g fill="#86b7ae" font-family="monospace" font-size="9" letter-spacing="2"><text x="10" y="300">URBAN SIGNALS / DEMO</text><text x="273" y="123">BEIJING</text><text x="285" y="213">SHANGHAI</text></g>
-      </g>
-
-      <g v-else-if="kind === 'temple'" transform="translate(230 40)">
-        <circle cx="185" cy="115" r="90" fill="#b5c7e8" opacity=".07" />
-        <circle cx="185" cy="115" r="65" stroke="#bed5eb" opacity=".24" />
-        <g stroke="#6b8ea2" opacity=".4"><ellipse cx="185" cy="270" rx="220" ry="26" /><ellipse cx="185" cy="280" rx="160" ry="17" /><path d="M-30 295H370M40 315H280M80 333H250" /></g>
-        <path d="M44 243 85 218H279L322 243 277 255H87Z" fill="#58737c" />
-        <path d="M65 232H300V244H65ZM85 219H280V232H85" fill="#879e9f" />
-        <path d="M101 127 186 72 270 127Z" fill="#b8c9c5" /><path d="M120 120 186 84 252 120Z" fill="#566f7b" />
-        <path d="M94 130H277V142H94" fill="#b8c9c5" />
-        <g v-for="x in [110,146,215,251]" :key="x"><path :d="`M${x} 144h13v71h-13z`" fill="#9dafb1" /><path :d="`M${x + 10} 144h5v71h-5z`" fill="#4e6b79" /></g>
-        <path d="M173 214V163Q185 140 198 163V214" fill="#f2efdf" opacity=".8" />
-        <path d="M177 259 194 259 212 323H158Z" fill="#dce4cd" opacity=".09" />
-        <text x="92" y="40" fill="#9ab6c7" font-size="9" font-family="monospace" letter-spacing="4">SANCTUARY / CONCEPT</text>
       </g>
 
       <g v-else-if="kind === 'castle'" transform="translate(235 25)">
@@ -108,6 +95,7 @@ defineProps({ kind: { type: String, required: true } })
 .work-cover{position:absolute;inset:0;overflow:hidden;pointer-events:none;color:#b7cdcb;background:radial-gradient(ellipse at 72% 35%,#31473d,#121c18 65%)}
 .work-cover svg{width:100%;height:100%;object-fit:cover;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
 .cover-city{background:radial-gradient(ellipse at 65% 30%,#183f42,#0d1a21 70%)}
+.temple-render{width:100%;height:100%;object-fit:cover;object-position:50% 45%;transition:transform .65s}.cover-temple::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07131b35 20%,#07131be0 100%)}:global(.card:hover) .temple-render{transform:scale(1.035)}
 .cover-temple{background:radial-gradient(ellipse at 66% 32%,#324f65,#111d2b 70%)}
 .cover-castle{background:radial-gradient(ellipse at 67% 20%,#41404c,#161820 70%)}
 .cover-brain{background:radial-gradient(ellipse at 65% 30%,#333e46,#151c21 70%)}

@@ -1,0 +1,46 @@
+{
+  "source": "aurelia_sanctuary_v3.blend",
+  "sourceSha256": "1531db7e8cc4fb9dfc9de40e9102a6bfe77ce0cf985231a82c0f7e213415822c",
+  "sourceMeshCount": 7802,
+  "meshCount": 23,
+  "sourcePolygons": 756888,
+  "webPolygons": 756887,
+  "bytes": 5668032,
+  "cameras": [
+    {
+      "name": "Reference composition",
+      "position": [
+        84.88,
+        91.76,
+        224.96
+      ],
+      "target": [
+        10.4172,
+        32.9103,
+        9.9786
+      ],
+      "fov": 34.205
+    },
+    {
+      "name": "Courtyard from the west",
+      "position": [
+        -108.56,
+        111.12,
+        192.72
+      ],
+      "target": [
+        7.5201,
+        33.3217,
+        3.7813
+      ],
+      "fov": 33.398
+    }
+  ],
+  "adaptations": [
+    "Volume fog replaced by runtime fog",
+    "Procedural materials use source base colors",
+    "Distant horizon quad omitted",
+    "Runtime lighting replaces Blender lights",
+    "Objects and collections hidden from source rendering omitted"
+  ]
+}
