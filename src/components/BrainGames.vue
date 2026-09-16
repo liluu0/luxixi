@@ -80,7 +80,7 @@ onBeforeUnmount(()=>{cancel();subscription.unsubscribe();actor.stop();document.r
   <div class="brain" :style="{'--signal':current?.color||'#d8ff36'}">
     <header class="brain-nav">
       <button class="brain-icon" title="返回作品集" aria-label="返回作品集" @click="onBack"><ArrowLeft/></button>
-      <a href="/" @click.prevent="onBack">LUXI<span>XI</span></a><span class="brain-nav-label">PLAY / THE MIND LAB</span><small>实验室开放中</small>
+      <a href="/#work" @click.prevent="onBack">LUXI<span>XI</span></a><span class="brain-nav-label">PLAY / THE MIND LAB</span><small>实验室开放中</small>
     </header>
     <main class="brain-main">
       <div class="brain-heading" :class="{'brain-heading-compact':selected}"><div><p class="brain-eyebrow">LUXIXI LAB / 005</p><h1>给大脑<br><em>找点麻烦。</em></h1></div><div class="brain-heading-note"><Brain :size="42"/><p>直觉偶尔也会走神。<br>今天，你能接住几次？</p><span>03 CHALLENGES / JUST FOR FUN</span></div></div>
