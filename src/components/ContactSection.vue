@@ -6,6 +6,13 @@ const message = ref('')
 const previewed = ref(false)
 const contactMode = ref(0)
 const contactModes = ['SIGNAL OPEN', 'READY TO CHAT', 'SEND A WAVE']
+const runnerPlaying = ref(false)
+let runnerTimer
+const greet = () => {
+  clearTimeout(runnerTimer)
+  runnerPlaying.value = true
+  runnerTimer = setTimeout(() => { runnerPlaying.value = false }, 800)
+}
 let timer
 const copy = async (value, key) => {
   clearTimeout(timer)
@@ -16,17 +23,17 @@ const copy = async (value, key) => {
     timer = setTimeout(() => { copied.value = ''; feedback.value = '' }, 1800)
   } catch { copied.value = ''; feedback.value = '复制失败，请选中号码手动复制' }
 }
-onUnmounted(() => clearTimeout(timer))
+onUnmounted(() => { clearTimeout(timer); clearTimeout(runnerTimer) })
 const submit = () => { previewed.value = true }
-const toggleContactMode = () => { contactMode.value = (contactMode.value + 1) % contactModes.length }
+
 </script>
 <template>
 <section id="contact" class="contact wrap reveal" :class="{ 'contact-ping': contactMode > 0 }" aria-labelledby="contact-title">
     <span class="contact-orbit orbit-one" aria-hidden="true"/><span class="contact-orbit orbit-two" aria-hidden="true"/>
     <div>
-      <div class="label">03 / CONTACT</div>
-      <div class="contact-title-row"><h2 id="contact-title"><button type="button" class="contact-title-trigger" :class="{ active: contactMode > 0 }" :aria-label="`保持联系，当前状态：${contactModes[contactMode]}，点击切换`" @click="toggleContactMode"><span>保持联系。</span><i aria-hidden="true">↗</i></button></h2><span :key="contactMode" class="contact-badge" aria-hidden="true">{{ contactModes[contactMode].split(' ')[0] }}<br>{{ contactModes[contactMode].split(' ').slice(1).join(' ') }}</span><img class="contact-runner" src="/assets/stickers/01-one-eyed-runner.svg" alt="一只奔跑的独眼小怪"></div>
-      <p :key="contactMode" class="contact-status" role="status">{{ contactModes[contactMode] }} <span>· 点击标题切换</span></p>
+      <div class="label">04 / CONTACT</div>
+      <div class="contact-title-row"><h2 id="contact-title"><button type="button" class="contact-title-trigger" :class="{ greeting: runnerPlaying }" aria-label="保持联系，和小怪打个招呼" @click="greet"><span class="contact-word">保持</span><span class="contact-word contact-word-note">联系<span class="contact-dot">。</span></span></button></h2><span :key="contactMode" class="contact-badge" aria-hidden="true">{{ contactModes[contactMode].split(' ')[0] }}<br>{{ contactModes[contactMode].split(' ').slice(1).join(' ') }}</span><button type="button" class="runner-button" :class="{ playing: runnerPlaying }" aria-label="和独眼小怪打招呼" @click="greet"><img class="contact-runner" src="/assets/stickers/01-one-eyed-runner.svg" alt=""><span aria-hidden="true">HEY!</span></button></div>
+      <p :key="contactMode" class="contact-status" role="status">{{ contactModes[contactMode] }} <span>· 点一下，打个招呼</span></p>
       <dl class="contact-details">
         <div><dt>QQ</dt><dd><span>3129830832</span><button class="copy" type="button" @click="copy('3129830832','qq')">{{ copied === 'qq' ? '已复制' : '复制' }}</button></dd></div>
         <div><dt>微信</dt><dd><span>a15707473356</span><button class="copy" type="button" @click="copy('a15707473356','wechat')">{{ copied === 'wechat' ? '已复制' : '复制' }}</button></dd></div>
@@ -79,4 +86,23 @@ button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
 @keyframes contact-badge-ping{0%{transform:scale(.82) rotate(-12deg);box-shadow:0 0 0 0 #d8ff3680}70%{transform:scale(1.18) rotate(8deg);box-shadow:0 0 0 18px #d8ff3600}100%{transform:scale(1) rotate(0)}}@keyframes contact-status-pop{0%{opacity:0;transform:translateY(-6px)}100%{opacity:.8;transform:none}}
 @media(prefers-reduced-motion:reduce){.contact-orbit,.contact-badge{animation:none}}
 @media(prefers-reduced-motion:reduce){button,.contact-details>div{transition:none}button:hover{transform:none}}
+
+.contact .contact-title-trigger{display:inline-flex;gap:7px;align-items:center;position:relative;padding:8px 0 12px;border:0;background:none;color:#f1efe7;transform:none;white-space:nowrap}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{background:none;color:#f1efe7;transform:none}
+.contact-word{display:inline-block;transition:transform .35s cubic-bezier(.2,.9,.25,1.4);transform:rotate(-3deg)}
+.contact-word-note{background:#bdb5ff;color:#171320;padding:2px 6px 5px;transform:rotate(4deg);box-shadow:4px 5px 0 #6057ff55;position:relative}
+.contact-word-note:before{content:'';position:absolute;left:25%;top:-6px;width:26px;height:11px;background:#f1efe788;transform:rotate(-12deg)}
+.contact-dot{color:#6551cf}
+.contact-title-trigger:hover .contact-word,.contact-title-trigger:focus-visible .contact-word,.contact-title-trigger.greeting .contact-word{transform:translateY(-4px) rotate(2deg)}
+.contact-title-trigger:hover .contact-word-note,.contact-title-trigger:focus-visible .contact-word-note,.contact-title-trigger.greeting .contact-word-note{transform:translateY(-7px) rotate(-5deg)}
+.contact-title-row .contact-badge{flex-shrink:0;margin-right:0}
+.runner-button{position:absolute;right:0;top:45px;width:118px;height:110px;padding:0;border:0;background:none;z-index:2;overflow:visible}
+.runner-button:hover,.runner-button:focus-visible{background:none;transform:none}
+.runner-button .contact-runner{inset:0;width:100%;height:100%;pointer-events:none}
+.runner-button>span{position:absolute;top:-12px;left:0;padding:5px 8px;background:#bdb5ff;color:#171320;font:bold 12px monospace;transform:rotate(-12deg) scale(.5);opacity:0;transition:opacity .2s,transform .25s;pointer-events:none}
+.runner-button:hover .contact-runner,.runner-button:focus-visible .contact-runner,.runner-button.playing .contact-runner{animation:runner-hello .7s ease-in-out infinite;filter:drop-shadow(9px 12px 0 #6057ff66)}
+.runner-button:hover>span,.runner-button:focus-visible>span,.runner-button.playing>span{opacity:1;transform:rotate(-12deg) scale(1)}
+@keyframes runner-hello{0%,100%{transform:translateY(0) rotate(-7deg)}35%{transform:translate(-5px,-15px) rotate(8deg)}70%{transform:translate(3px,-5px) rotate(-12deg)}}
+@media(max-width:700px){.contact h2{font-size:clamp(27px,7.2vw,36px)}.contact-title-row{gap:14px}.runner-button{width:82px;height:78px;top:50px}.contact-details{margin-top:65px}}
+@media(prefers-reduced-motion:reduce){.contact-word,.runner-button>span{transition:none}.runner-button .contact-runner,.runner-button:hover .contact-runner,.runner-button:focus-visible .contact-runner,.runner-button.playing .contact-runner{animation:none}.contact-title-trigger:hover .contact-word,.contact-title-trigger:focus-visible .contact-word,.contact-title-trigger.greeting .contact-word{transform:none}}
 </style>
