@@ -2,6 +2,8 @@
 
 基于 Vue 3 和 Vite 的个人作品集，包含个人首页、城市数据可视化、三维人体图谱和两类浏览器游戏。项目为纯前端应用，可部署到静态网站服务；当前不包含账号系统、数据库或业务后端。
 
+线上访问：[https://luxixi-c4g.pages.dev/](https://luxixi-c4g.pages.dev/)。部署平台：**Cloudflare Pages**。
+
 ## 作品与入口
 
 以下地址以本地开发服务 `http://localhost:5173` 为例，实际端口以启动日志为准。
@@ -158,6 +160,8 @@ node --test game-tools/castle-battle/safety.test.mjs
 页面调整建议核验桌面和移动端布局、路由直达与刷新、返回导航、控制台错误，以及相关作品的关键交互。构建通过不等同于浏览器视觉或所有设备性能通过；作品文档中的验收结果属于当时版本的记录。
 
 ## 静态部署
+
+当前项目使用 **Cloudflare Pages** 部署，线上地址为 [https://luxixi-c4g.pages.dev/](https://luxixi-c4g.pages.dev/)。本地预览地址仅用于开发验收；线上效果以 Cloudflare Pages 完成部署后的版本为准。
 
 完整发布 `dist/`，默认部署在域名根目录。Vue Router 使用 History 模式，服务端须将页面路径回退到 `index.html`，否则刷新 `/works/*` 会返回 404。
 
