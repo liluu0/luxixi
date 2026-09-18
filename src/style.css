@@ -5,6 +5,7 @@
 .cards .c3{background:linear-gradient(140deg,#161b17,#46753a,#161b17)}
 .cards .c2{background:repeating-linear-gradient(45deg,#222034 0 14px,#493e65 15px 16px)}
 .cards .c4{background:#603026}
+.cards .c7{background:linear-gradient(145deg,#241c2d,#3c2942,#171923)}
 .cards .temple-card{background:linear-gradient(145deg,#132c32,#283c43,#11191f)}
 .card{min-width:0}
 .card h3{font-size:48px;line-height:1.15;letter-spacing:0;overflow-wrap:anywhere}

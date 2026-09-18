@@ -178,6 +178,11 @@ onUnmounted(()=>observer?.disconnect())
             <span class="tag">ARCHIVE / COMING SOON</span>
             <h3>虚构物种<br>档案</h3>
           </button>
+          <button type="button" class="card c7 pending-work" @click="comingSoon.open('werewolf')">
+            <WorkCover kind="werewolf" />
+            <span class="tag">GAME / COMING SOON</span>
+            <h3>狼人杀<br>夜间游戏</h3>
+          </button>
           <button type="button" class="card c6 pending-work" @click="comingSoon.open('more')">
             <WorkCover kind="more" />
             <span class="tag">COMING SOON</span>

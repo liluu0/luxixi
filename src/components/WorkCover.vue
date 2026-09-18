@@ -5,7 +5,7 @@ defineProps({ kind: { type: String, required: true } })
 
 <template>
   <div class="work-cover" :class="`cover-${kind}`" aria-hidden="true">
-    <img v-if="kind === 'temple'" class="temple-render" :src="previewUrl" alt="" loading="lazy"><svg v-else viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <img v-if="kind === 'temple'" class="temple-render" :src="previewUrl" alt="" loading="lazy"><img v-else-if="['anatomy','city','castle','brain','archive','werewolf','more'].includes(kind)" class="card-render" :src="`/assets/stickers/${kind}-card.webp`" alt="" loading="lazy"><svg v-else viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g class="cover-guides" stroke="currentColor" stroke-width=".6" opacity=".15">
         <path v-for="n in 12" :key="`v${n}`" :d="`M${n * 60} 0V440`" />
         <path v-for="n in 7" :key="`h${n}`" :d="`M0 ${n * 60}H700`" />
@@ -95,12 +95,13 @@ defineProps({ kind: { type: String, required: true } })
 .work-cover{position:absolute;inset:0;overflow:hidden;pointer-events:none;color:#b7cdcb;background:radial-gradient(ellipse at 72% 35%,#31473d,#121c18 65%)}
 .work-cover svg{width:100%;height:100%;object-fit:cover;transition:transform .65s cubic-bezier(.2,.7,.2,1)}
 .cover-city{background:radial-gradient(ellipse at 65% 30%,#183f42,#0d1a21 70%)}
-.temple-render{width:100%;height:100%;object-fit:cover;object-position:50% 45%;transition:transform .65s}.cover-temple::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07131b35 20%,#07131be0 100%)}:global(.card:hover) .temple-render{transform:scale(1.035)}
+.temple-render,.card-render{width:100%;height:100%;object-fit:cover;object-position:50% 45%;transition:transform .65s}.cover-temple::after,.cover-werewolf::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,#07131b35 20%,#07131be0 100%)}:global(.card:hover) .temple-render,:global(.card:hover) .card-render{transform:scale(1.035)}
 .cover-temple{background:radial-gradient(ellipse at 66% 32%,#324f65,#111d2b 70%)}
 .cover-castle{background:radial-gradient(ellipse at 67% 20%,#41404c,#161820 70%)}
 .cover-brain{background:radial-gradient(ellipse at 65% 30%,#333e46,#151c21 70%)}
 .cover-archive{background:radial-gradient(ellipse at 65% 30%,#444333,#1a211b 70%)}
 .cover-more{background:radial-gradient(ellipse at 65% 40%,#283427,#121a15 70%)}
+.cover-werewolf{background:#171936}
 :global(.card:hover) .work-cover svg{transform:scale(1.035)}
 @media(prefers-reduced-motion:reduce){.work-cover svg{transition:none}:global(.card:hover) .work-cover svg{transform:none}}
 </style>

@@ -10,6 +10,7 @@ const kind = ref('archive')
 const messages = {
   temple: { title: '湖心圣殿还在构想中', body: '这座湖上的圣殿正在等待成形。3D 建模作品暂未开放，等准备好了，再邀请你来探索。' },
   archive: { title: '档案馆还在悄悄布置', body: '想象力已经就位，代码还在努力追赶！这份脑洞暂时保密，等准备好了，再请你来拆惊喜。' },
+  werewolf: { title: '狼人杀还在黑夜里', body: '身份牌已经洗好，村庄的灯还没亮。这场狼人杀正在准备中，等规则和角色都就位，再来找出那匹狼。' },
   more: { title: '灵感正在路上', body: '这里暂时住着一颗会发光的小点子。它还在努力变成作品，请过一阵子再来看看吧。' },
 }
 const message = computed(() => messages[kind.value])
