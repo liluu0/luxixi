@@ -112,7 +112,7 @@ onUnmounted(() => {
 <template>
   <section id="visual-gallery" ref="section" class="gallery reveal" aria-labelledby="gallery-title" aria-roledescription="轮播">
     <header class="gallery-heading wrap">
-      <div><div class="label">02 / VISUAL EXPERIMENTS</div><h2 id="gallery-title">脑内放映室<span aria-hidden="true">✳</span></h2></div>
+      <div><div class="label">02 / VISUAL EXPERIMENTS</div><h2 id="gallery-title" class="gallery-title-art"><span>脑内</span><em>放映室</em><b aria-hidden="true">✳</b></h2></div>
       <p>四帧想象，暂时逃离日常。<br><span>SCENES FROM SOMEWHERE ELSE</span></p>
     </header>
     <div ref="viewport" class="gallery-viewport" :class="{ dragging, 'has-cursor': hovering }" tabindex="0" aria-label="四幅视觉作品，使用左右方向键切换" @keydown="key" @pointerdown="down" @pointermove="move" @pointerup="up" @pointercancel="settle" @lostpointercapture="settle" @pointerleave="hovering = false">
@@ -156,7 +156,19 @@ onUnmounted(() => {
 .gallery-heading{display:flex;justify-content:space-between;align-items:end;gap:30px;margin-bottom:42px}
 .gallery-heading .label{margin-bottom:30px}
 .gallery-heading h2{font-size:clamp(36px,5.4vw,72px);line-height:1.15;letter-spacing:-.045em}
-.gallery-heading h2 span{display:inline-block;color:var(--acid);font-size:.6em;margin-left:18px;vertical-align:top;transform:rotate(-15deg)}
+.gallery-title-art{display:inline-flex;align-items:flex-start;gap:.12em;position:relative;isolation:isolate;padding:9px 17px 12px 11px;border:1px solid #4c5749;box-shadow:8px 8px 0 #000;overflow:hidden;transition:transform .4s cubic-bezier(.2,.9,.25,1.25),border-color .25s,box-shadow .35s}
+.gallery-title-art:before{content:'';position:absolute;z-index:-1;left:10px;right:10px;bottom:8px;height:2px;background:var(--pink);opacity:.7;transform:scaleX(.18) rotate(-2deg);transform-origin:left;transition:transform .42s cubic-bezier(.2,.8,.2,1)}
+.gallery-title-art:after{content:'NOW SHOWING · 02';position:absolute;left:12px;top:3px;color:#89947e;font:8px/1 monospace;letter-spacing:.12em;transition:color .25s}
+.gallery-title-art span,.gallery-title-art em{display:inline-block;font-style:normal;transition:transform .4s cubic-bezier(.2,.9,.25,1.35),color .25s,-webkit-text-stroke-color .25s}
+.gallery-title-art span{margin-top:9px}
+.gallery-title-art em{color:var(--orange);-webkit-text-stroke:1px var(--orange)}
+.gallery-title-art b{display:grid;place-items:center;width:24px;height:24px;margin-top:-4px;border-radius:50%;background:var(--pink);color:#111;font:11px/1 monospace;transform:rotate(-15deg);transition:transform .35s cubic-bezier(.2,.9,.25,1.35)}
+.gallery-title-art:hover{transform:translate(-4px,-5px) rotate(-.8deg);border-color:var(--acid);box-shadow:13px 14px 0 var(--blue,#6057ff)}
+.gallery-title-art:hover:before{transform:scaleX(1) rotate(-2deg)}
+.gallery-title-art:hover:after{color:var(--pink)}
+.gallery-title-art:hover span{transform:translateX(4px) rotate(-2deg);color:var(--ink)}
+.gallery-title-art:hover em{transform:translateX(-3px) rotate(2deg);color:transparent;-webkit-text-stroke-color:var(--orange)}
+.gallery-title-art:hover b{transform:rotate(0) scale(1.2)}
 .gallery-heading p{margin:0 0 5px;color:#b1b5a8;font:13px/2 'Microsoft YaHei',sans-serif}
 .gallery-heading p span{font:9px/2 monospace;letter-spacing:.12em;color:#818a76}
 .gallery-viewport{position:relative;overflow:hidden;touch-action:pan-y pinch-zoom;user-select:none;cursor:grab;outline-offset:-3px}
@@ -182,6 +194,21 @@ onUnmounted(() => {
 .gallery button:focus-visible,.gallery-viewport:focus-visible{outline:2px solid var(--acid);outline-offset:3px}
 .gallery-hint{margin:22px auto 0;color:#818a76;font-size:10px;letter-spacing:.12em}.mobile-hint{display:none}
 @keyframes gallery-pulse{0%,80%,100%{opacity:.3;transform:scale(.7)}40%{opacity:1;transform:scale(1.25)}}
-@media(max-width:700px){.gallery:before{width:calc(100% - 32px)}.gallery-viewport{width:calc(100% - 32px);margin:auto}.gallery-heading{display:block;margin-bottom:26px}.gallery-heading p{margin-top:20px}.gallery-heading h2{font-size:clamp(30px,8.5vw,50px)}.gallery-slide{flex-basis:100%}.gallery-track{gap:16px}.gallery-footer{flex-wrap:wrap;padding-top:20px}.gallery-caption{gap:16px}.gallery-controls{width:100%;justify-content:space-between}.gallery-dots button{width:40px}.gallery-cursor{display:none}.desktop-hint{display:none}.mobile-hint{display:inline}.gallery-hint{text-align:center;margin-top:12px}.frame-number{left:10px;bottom:10px;font-size:8px}}
-@media(prefers-reduced-motion:reduce){.gallery-track,.gallery-slide img,.gallery-cursor,.gallery-dots span{transition:none}.gallery-loading i{animation:none}.gallery.reveal{opacity:1;transform:none;transition:none}}
+@media(max-width:700px){.gallery:before{width:calc(100% - 32px)}.gallery-viewport{width:calc(100% - 32px);margin:auto}.gallery-heading{display:block;margin-bottom:26px}.gallery-heading p{margin-top:20px}.gallery-heading h2{font-size:clamp(30px,8.5vw,50px)}.gallery-title-art{width:max-content;max-width:100%;padding:8px 12px 10px 8px;box-shadow:5px 6px 0 #000}.gallery-title-art:after{left:9px;font-size:7px}.gallery-title-art b{width:19px;height:19px;font-size:9px}.gallery-slide{flex-basis:100%}.gallery-track{gap:16px}.gallery-footer{flex-wrap:wrap;padding-top:20px}.gallery-caption{gap:16px}.gallery-controls{width:100%;justify-content:space-between}.gallery-dots button{width:40px}.gallery-cursor{display:none}.desktop-hint{display:none}.mobile-hint{display:inline}.gallery-hint{text-align:center;margin-top:12px}.frame-number{left:10px;bottom:10px;font-size:8px}}
+@media(prefers-reduced-motion:reduce){.gallery-track,.gallery-slide img,.gallery-cursor,.gallery-dots span,.gallery-title-art,.gallery-title-art:before,.gallery-title-art span,.gallery-title-art em,.gallery-title-art b{transition:none}.gallery-loading i{animation:none}.gallery.reveal{opacity:1;transform:none;transition:none}.gallery-title-art:hover{transform:none}.gallery-title-art:hover span,.gallery-title-art:hover em,.gallery-title-art:hover b{transform:none}}
+
+/* Final title direction: the idle state is plain; hover provides the only motion. */
+.gallery-title-art{display:inline-flex;padding:0 28px 8px 0;border:0;box-shadow:none;overflow:visible;transition:none}
+.gallery-title-art:before{left:0;right:28px;bottom:1px;height:1px;background:var(--pink);opacity:.8;transform:scaleX(.28) rotate(-1deg);transition:transform .25s ease}
+.gallery-title-art:after{content:'✳';left:auto;right:0;top:-4px;color:var(--acid);font:13px/1 monospace;letter-spacing:0;transition:transform .25s ease,color .2s}
+.gallery-title-art span,.gallery-title-art em{transition:transform .25s ease,color .2s,-webkit-text-stroke-color .2s}
+.gallery-title-art span{margin-top:0;color:transparent;background:linear-gradient(120deg,#f1efe7 0%,#ff9a72 78%);background-clip:text;-webkit-background-clip:text}
+.gallery-title-art em{color:transparent;background:linear-gradient(120deg,#ff694f 0%,#e3a5c7 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-stroke:0}
+.gallery-title-art b{display:none}
+.gallery-title-art:hover{transform:none;border:0;box-shadow:none}
+.gallery-title-art:hover:before{transform:scaleX(1) rotate(-1deg)}
+.gallery-title-art:hover:after{color:var(--pink);transform:translate(2px,-2px) rotate(12deg)}
+.gallery-title-art:hover span{transform:translateX(2px);color:transparent;background-position:8px 0}
+.gallery-title-art:hover em{transform:translateX(-2px);color:transparent;background-position:-6px 0;-webkit-text-stroke:0}
+@media(prefers-reduced-motion:reduce){.gallery-title-art,.gallery-title-art:before,.gallery-title-art:after,.gallery-title-art span,.gallery-title-art em{transition:none}.gallery-title-art:hover span,.gallery-title-art:hover em,.gallery-title-art:hover:after{transform:none}}
 </style>
