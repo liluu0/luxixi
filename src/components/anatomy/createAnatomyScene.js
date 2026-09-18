@@ -264,6 +264,7 @@ export function createAnatomyScene(host, atlas, callbacks) {
 
   async function load() {
     let cursor = 0, loaded = 0
+    const initialReadyChunks = Math.min(3, atlas.chunks.length)
     try {
       await Promise.all(Array.from({ length: 3 }, async () => {
         while (cursor < atlas.chunks.length && !disposed) {
@@ -285,10 +286,15 @@ export function createAnatomyScene(host, atlas, callbacks) {
           loaded++
           applyState()
           callbacks.onProgress(Math.round(loaded / atlas.chunks.length * 100))
+          if (!ready && loaded >= initialReadyChunks) {
+            ready = true
+            callbacks.onReady()
+            fit(currentView, state.isolated, true)
+          }
           await new Promise(resolve => setTimeout(resolve, 0))
         }
       }))
-      if (!disposed) { ready = true; applyState(); callbacks.onReady(); fit(currentView, state.isolated, true) }
+      if (!disposed) { ready = true; applyState(); fit(currentView, state.isolated, true) }
     } catch (error) {
       if (!disposed) { abort.abort(); callbacks.onError(error.message || '模型加载失败，请重试。') }
     }

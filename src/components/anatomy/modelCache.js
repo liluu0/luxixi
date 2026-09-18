@@ -1,5 +1,7 @@
 import manifest from './cacheManifest.json'
 
+const configuredModelRoot = import.meta.env?.VITE_ANATOMY_ASSET_BASE_URL?.replace(/\/+$/, '')
+const modelRoot = configuredModelRoot || '/assets/anatomy'
 const cacheName = `luxixi-anatomy-${manifest.version}`
 const pending = new Map()
 let cachePromise
@@ -31,7 +33,7 @@ function waitFor(promise, signal) {
 export async function getModelResponse(name, { signal, priority = 'high' } = {}) {
   const hash = manifest.files[name]
   if (!hash) throw new Error('未知的模型资源，请刷新页面。')
-  const url = `/assets/anatomy/${name}?v=${hash.slice(0, 16)}`
+  const url = `${modelRoot}/${name}?v=${hash.slice(0, 16)}`
   if (!pending.has(url)) {
     const request = (async () => {
       const cache = await openCache()
