@@ -6,9 +6,9 @@ import regionIndex from '../assets/city-regions.json'
 import { provinceProfiles } from './cityHeatmap/provinceProfiles'
 defineProps({ onBack: Function })
 const metrics = [
-  { label:'常住人口', unit:'万人', code:'POPULATION', color:'#83dfbd' },
-  { label:'经济规模', unit:'亿元', code:'ECONOMY', color:'#e8bd7c' },
-  { label:'旅游热度', unit:'指数', code:'TOURISM', color:'#ee9aaa' },
+  { label:'常住人口', unit:'万人', code:'POPULATION', color:'#d8ff36' },
+  { label:'经济规模', unit:'亿元', code:'ECONOMY', color:'#ff9b73' },
+  { label:'旅游热度', unit:'指数', code:'TOURISM', color:'#ff78b7' },
   { label:'住房价格', unit:'元/m²', code:'HOUSING', color:'#a9bfff' },
 ]
 // Retain the original demonstration observations; no live or official feed is implied.
@@ -289,6 +289,34 @@ onUnmounted(()=>{disposed=true;observer?.disconnect();clearTimeout(loadTimer);wi
 .urban-pulse .land:focus,.urban-pulse .node:focus{outline:none}
 .urban-pulse .node:focus-visible .core{stroke:#fff5bd;stroke-width:3}
 @media(prefers-reduced-motion:reduce){.urban-pulse *{transition:none!important}}
+
+/* LUXIXI palette: ink-blue workspace with acid, coral, pink and periwinkle signals. */
+.urban-pulse{--pulse-bg:#10151a;--pulse-panel:#172128;--pulse-panel-raised:#1d2a30;--edge:#2d3d43;--muted:#8d9b9c;background:var(--pulse-bg);color:#f1efe7}
+.urban-pulse .pulse-header{background:#141c22;border-color:var(--edge)}
+.urban-pulse .metric-tabs>button{background:#18242a;border-color:var(--edge)}
+.urban-pulse .metric-tabs>button.selected{background:#223139}
+.urban-pulse .analysis,.urban-pulse .bottom{border-color:var(--edge)}
+.urban-pulse .urban-pulse,.urban-pulse .geo,.urban-pulse .ranking{background:transparent}
+.urban-pulse .profile{background:#17242b;border-color:var(--edge)}
+.urban-pulse .search,.urban-pulse select{background:#1b2a30;border-color:var(--edge);color:#dbe7e2}
+.urban-pulse .layers{background:#111a1f;border-color:var(--edge)}
+.urban-pulse .layers button.selected{background:#334348;color:#f1efe7}
+.urban-pulse .map{background-color:#0c171d;background-image:linear-gradient(#a9bfff10 1px,transparent 1px),linear-gradient(90deg,#a9bfff10 1px,transparent 1px);border-color:#36505a}
+.urban-pulse .land{fill:#20343a;stroke:#5b7b7d}
+.urban-pulse .land.focused{fill:#315052;stroke:#d8ff36}
+.urban-pulse .land[role=button]:hover{fill:#3b5c5e;stroke:#d8ff36}
+.urban-pulse .node text{fill:#c8d9d5;stroke:#102027}
+.urban-pulse .node.chosen text{fill:#fff1d7}
+.urban-pulse .map-caption span{color:#d4e4df}.urban-pulse .map-caption small{color:#789095}
+.urban-pulse .map-bottom,.urban-pulse .map-stats small,.urban-pulse .coordinates{color:#91a6a5}
+.urban-pulse .legend i{background:linear-gradient(90deg,#20343a,var(--accent),#fff1d7)}
+.urban-pulse .compare-bars i,.urban-pulse .rank-grid i{background:#2a3a40}
+.urban-pulse .city-boundaries path{stroke:#8aa8a6}
+.urban-pulse .boundary-status{background:#1b3035;color:#dcebe5}
+.urban-pulse .province-cities button{border-color:#2b4146;color:#dce7e1}
+.urban-pulse .province-cities button:hover{background:#263b42}
+.urban-pulse .toast{background:#d8ff36;color:#10151a;border-color:#efffa1}
+.urban-pulse .pulse-footer{color:#819497}
 .land[role=button]{cursor:pointer}.land[role=button]:hover{fill:#3e5434;stroke:#d5ddb8}.land:focus-visible{outline:none;stroke:#fff4ba;stroke-width:2}.city-boundaries{pointer-events:none}.city-boundaries path{fill:none;stroke:#a6bea0;stroke-opacity:.65;stroke-width:.8;vector-effect:non-scaling-stroke}.node.geographic .core{fill:#182c20;stroke:#d0ddd0;stroke-width:1.1}.node text{font-size:11px}.node.chosen text{font-size:12px}.map-context{display:flex;align-items:center;gap:10px;margin-bottom:10px;color:#92a68d}.map-context button{border:0;background:none;padding:3px 0;color:#d2e2c6;font-size:11px}.map-context small{margin-left:auto;font-size:10px}.search-results{display:flex;flex-wrap:wrap;gap:5px 14px;padding:8px 0 14px}.search-results button{display:flex;gap:5px;align-items:center;border:0;background:none;color:var(--accent);font-size:12px}.search-results small{color:var(--muted);font-size:10px}.boundary-status{position:absolute;bottom:40px;left:14px;font-size:11px;background:#1d2c20;padding:6px 9px;border-radius:3px;color:#dce9d1}.boundary-status button{border:0;background:none;color:#e6c99a;font-size:11px}.geo-key{margin-left:10px;color:#aabda5}.province-title{margin-top:24px;display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}.province-title h2{font-size:26px;line-height:1.4;overflow-wrap:anywhere}.province-title>span{color:var(--accent);font-size:11px}.province-summary{font-size:13px;line-height:1.9;color:#c2cdb5;margin:18px 0 15px}.province-traits{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11px;color:var(--accent)}.province-traits span{border-bottom:1px solid #506747;padding-bottom:5px}.province-facts{margin:22px 0;border-top:1px solid var(--edge);padding-top:12px}.province-facts>div{display:flex;justify-content:space-between;gap:12px;padding:9px 0;font-size:11px}.province-facts dt{color:var(--muted)}.province-facts dd{margin:0;text-align:right}.province-list-heading{display:flex;justify-content:space-between;align-items:center;margin:20px 0 10px}.province-list-heading>span{font-size:10px;color:var(--muted)}.province-cities{max-height:240px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:#5b7651 #1c271d}.province-cities button{display:flex;align-items:center;gap:9px;width:100%;padding:11px 3px;border:0;border-bottom:1px solid #34462d;background:none;color:#dce7d1;text-align:left;font-size:12px}.province-cities button:hover{color:var(--accent);background:#2b3826}.province-cities small{font-size:10px;color:var(--muted);margin-left:auto}.province-cities svg{margin-left:auto;flex-shrink:0}.province-cities small+svg{margin-left:0}.province-source,.no-geo{font-size:10px;color:#a1b18f;line-height:1.8;margin:18px 0 0}.profile-back{display:flex;align-items:center;gap:6px;border:0;background:none;color:var(--accent);font-size:11px!important;padding:0 0 20px}.no-sample{padding:25px 0;border-top:1px solid var(--edge);margin-top:24px;color:#b8c9ad}.no-sample>svg{color:var(--accent);margin-bottom:14px}.no-sample p{font-size:12px;line-height:1.9}.no-sample>div{display:flex;justify-content:space-between;margin-top:18px;gap:10px}.no-sample strong{font-size:12px;font-weight:400}.no-sample small{font-size:11px;color:var(--muted)}.map{cursor:grab}.map:active{cursor:grabbing}
 @media(max-width:760px){.filters .search{flex-basis:100%;max-width:none}.section-header>span{font-size:9px;max-width:110px;text-align:right;line-height:1.6}.geo-key{display:none}.province-title h2{font-size:24px}.province-cities{max-height:280px}.province-summary{font-size:13px}.map-context small{font-size:9px}}
 </style>

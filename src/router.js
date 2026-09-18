@@ -15,6 +15,17 @@ export const routePaths = {
   lakeSanctuary: '/works/lake-sanctuary',
 }
 
+let navigationPromise
+function openWork(name, path) {
+  if (navigationPromise) return navigationPromise
+  navigationPromise = router.push({ name }).catch(error => {
+    // A stale or failed lazy chunk otherwise leaves the homepage looking inert.
+    console.error(`作品页面加载失败：${path}`, error)
+    if (window.location.pathname !== path) window.location.assign(path)
+  }).finally(() => { navigationPromise = null })
+  return navigationPromise
+}
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -23,11 +34,11 @@ const router = createRouter({
       name: 'home',
       component: HomePage,
       props: {
-        onOpen: () => router.push({ name: 'city-heatmap' }),
-        onOpenAnatomy: () => router.push({ name: 'anatomy-visualizer' }),
-        onOpenCastle: () => router.push({ name: 'castle-battle' }),
-        onOpenBrain: () => router.push({ name: 'brain-games' }),
-        onOpenSanctuary: () => router.push({ name: 'lake-sanctuary' }),
+        onOpen: () => openWork('city-heatmap', routePaths.cityHeatmap),
+        onOpenAnatomy: () => openWork('anatomy-visualizer', routePaths.anatomyVisualizer),
+        onOpenCastle: () => openWork('castle-battle', routePaths.castleBattle),
+        onOpenBrain: () => openWork('brain-games', routePaths.brainGames),
+        onOpenSanctuary: () => openWork('lake-sanctuary', routePaths.lakeSanctuary),
       },
     },
     {

@@ -197,13 +197,14 @@ export function createAnatomyScene(host, atlas, callbacks) {
   resizeObserver.observe(host)
   resize()
   const raycaster = new THREE.Raycaster(), pointer = new THREE.Vector2()
+  const hitInstance = hit => hit?.instanceId ?? hit?.batchId
   function pick(event) {
     const rect = canvas.getBoundingClientRect()
     pointer.set((event.clientX - rect.left) / rect.width * 2 - 1, -(event.clientY - rect.top) / rect.height * 2 + 1)
     raycaster.setFromCamera(pointer, camera)
     const hits = raycaster.intersectObjects([...batches.values()], false)
     return hits.find(hit => {
-      const part = hit.object.userData.parts.get(hit.batchId)
+      const part = hit.object.userData.parts.get(hitInstance(hit))
       return part && part.system !== 'integumentary' && (!state.clip || clipPlane.distanceToPoint(hit.point) >= 0)
     })
   }
@@ -216,7 +217,7 @@ export function createAnatomyScene(host, atlas, callbacks) {
     if (event.buttons || !ready || performance.now() - lastHover < 110 || event.pointerType === 'touch') return
     lastHover = performance.now()
     const hit = pick(event)
-    const part = hit?.object.userData.parts.get(hit.batchId)
+    const part = hit?.object.userData.parts.get(hitInstance(hit))
     canvas.style.cursor = part ? 'pointer' : 'grab'
     const rect = canvas.getBoundingClientRect()
     callbacks.onHover(part ? { name: part.name, x: Math.min(event.clientX - rect.left + 14, rect.width - 205), y: Math.max(12, event.clientY - rect.top - 35) } : null)
@@ -224,7 +225,7 @@ export function createAnatomyScene(host, atlas, callbacks) {
   function pointerUp(event) {
     if (down?.id === event.pointerId && !down.moved && ready) {
       const hit = pick(event)
-      if (hit) callbacks.onSelect(hit.object.userData.parts.get(hit.batchId))
+      if (hit) callbacks.onSelect(hit.object.userData.parts.get(hitInstance(hit)))
     }
     down = null
   }
@@ -271,7 +272,9 @@ export function createAnatomyScene(host, atlas, callbacks) {
           const chunkId = cursor++
           const buffer = await loadChunk(atlas.chunks[chunkId], abort.signal)
           if (disposed) return
-          for (const part of atlas.parts.filter(p => p.chunk === chunkId)) {
+          const parts = atlas.parts.filter(p => p.chunk === chunkId)
+          for (let partIndex = 0; partIndex < parts.length; partIndex++) {
+            const part = parts[partIndex]
             const geometry = new THREE.BufferGeometry()
             geometry.setAttribute('position', new THREE.BufferAttribute(new Float32Array(buffer, part.positions, part.vertexCount * 3), 3))
             geometry.setAttribute('normal', new THREE.BufferAttribute(new Int16Array(buffer, part.normals, part.vertexCount * 3), 3, true))
@@ -282,6 +285,7 @@ export function createAnatomyScene(host, atlas, callbacks) {
             const bounds = new THREE.Box3(new THREE.Vector3().fromArray(part.bounds[0]), new THREE.Vector3().fromArray(part.bounds[1]))
             records.set(part.id, { part, batch, instance, bounds })
             geometry.dispose()
+            if ((partIndex + 1) % 48 === 0) await new Promise(resolve => requestAnimationFrame(resolve))
           }
           loaded++
           applyState()
