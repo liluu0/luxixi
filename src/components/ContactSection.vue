@@ -111,4 +111,145 @@ button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
     display: none;
   }
 }
+
+/* Contact title: restrained motion with a small hand-drawn signal detail. */
+.contact-title-row{position:relative}
+.contact .contact-title-trigger{isolation:isolate;gap:10px;padding:10px 14px 15px 7px;color:var(--orange);font-size:clamp(38px,5vw,58px);line-height:.92}
+.contact .contact-title-trigger:before{content:'';position:absolute;z-index:-1;left:5px;right:30px;bottom:7px;height:2px;background:var(--pink);opacity:.78;transform:rotate(-2deg) scaleX(.34);transform-origin:left;transition:transform .35s cubic-bezier(.2,.9,.25,1.25)}
+.contact .contact-title-trigger:after{content:'↗';position:absolute;right:0;top:3px;color:var(--acid);font:15px/1 monospace;transform:rotate(-18deg);transition:transform .3s cubic-bezier(.2,.9,.25,1.3),color .25s}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{color:var(--orange);transform:translate(2px,-2px) rotate(-.5deg)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{transform:rotate(-2deg) scaleX(1)}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{color:var(--pink);transform:translate(2px,-2px) rotate(0) scale(1.12)}
+.contact .contact-word{position:relative;transition:transform .35s cubic-bezier(.2,.9,.25,1.35),text-shadow .25s}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateY(-3px) rotate(-2deg);text-shadow:3px 3px 0 #6057ff66}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateY(2px) rotate(2deg)}
+.contact .contact-word-note{background:transparent;color:inherit;padding:0;box-shadow:none;transform:rotate(-1deg);transition:transform .35s cubic-bezier(.2,.9,.25,1.35),color .25s}
+.contact .contact-word-note:before{display:none}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{color:inherit}
+.contact .contact-dot{color:var(--pink)}
+@media(max-width:700px){.contact .contact-title-trigger{font-size:clamp(30px,8vw,42px);padding-left:3px;padding-right:8px}.contact .contact-title-row{gap:10px}}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:before,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note{transition:none}.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting,.contact .contact-title-trigger:hover .contact-word,.contact .contact-title-trigger:focus-visible .contact-word,.contact .contact-title-trigger.greeting .contact-word{transform:none}}
+
+/* Final title direction: quiet type first, motion only on hover. */
+.contact .contact-title-trigger{gap:8px;padding:9px 14px 13px 8px;border:0;color:var(--orange);background:none;font-size:clamp(38px,5vw,58px);line-height:.95;transform:none;transition:transform .25s ease}
+.contact .contact-title-trigger:before{left:9px;right:auto;bottom:5px;width:28px;height:2px;background:var(--pink);opacity:.9;transform:skewX(-18deg);transition:transform .25s ease,left .35s ease}
+.contact .contact-title-trigger:after{content:'';right:0;top:auto;bottom:4px;width:4px;height:4px;border-radius:50%;background:var(--acid);font-size:0;transform:none;transition:transform .25s ease}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{color:var(--orange);background:none;transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{left:calc(100% - 45px);transform:skewX(-18deg)}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{color:var(--acid);transform:translate(2px,-2px) scale(1.15)}
+.contact .contact-word,.contact .contact-word-note{background:none;color:var(--orange);padding:0;box-shadow:none;border:0;transform:none;transition:transform .25s ease,color .2s}
+.contact .contact-word-note{color:transparent;-webkit-text-stroke:1px #f1efe7;text-shadow:none}
+.contact .contact-word-note:before{display:none}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateX(1px);text-shadow:none}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateX(2px);color:transparent}
+
+/* Final ivory override for both title words. */
+.contact h2#contact-title > .contact-title-trigger > .contact-word,
+.contact h2#contact-title > .contact-title-trigger > .contact-word-note,
+.contact h2#contact-title > .contact-title-trigger > .contact-word > .contact-dot,
+.contact h2#contact-title > .contact-title-trigger > .contact-word-note > .contact-dot,
+.contact h2#contact-title > .contact-title-trigger:hover > .contact-word,
+.contact h2#contact-title > .contact-title-trigger:hover > .contact-word-note,
+.contact h2#contact-title > .contact-title-trigger:focus-visible > .contact-word,
+.contact h2#contact-title > .contact-title-trigger:focus-visible > .contact-word-note,
+.contact h2#contact-title > .contact-title-trigger.greeting > .contact-word,
+.contact h2#contact-title > .contact-title-trigger.greeting > .contact-word-note{color:#e8e5dc!important;background:#e8e5dc!important;background-clip:text!important;-webkit-background-clip:text!important;-webkit-text-fill-color:#e8e5dc!important;-webkit-text-stroke:0!important;text-shadow:none!important}
+.contact .contact-dot{color:var(--pink)}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:before,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note{transition:none}}
+
+/* Contact title v5: warm ivory hollow lettering with one orange hand-drawn accent. */
+.contact .contact-title-trigger{all:unset;position:relative;display:inline-flex;align-items:baseline;gap:.18em;padding:8px 20px 13px 0;cursor:pointer;line-height:.9;letter-spacing:.02em;transition:transform .25s ease}
+.contact .contact-title-trigger:before{content:'';position:absolute;left:auto;right:0;top:0;width:0;height:0;background:none;opacity:0;transform:none}
+.contact .contact-title-trigger:after{content:'✦';position:absolute;right:0;top:0;color:#d7df83;font:12px/1 Arial;transform:rotate(10deg);transition:transform .25s ease}
+.contact .contact-word,.contact .contact-word-note{all:unset;display:inline-block;position:relative;font:800 clamp(38px,5vw,58px)/.9 Arial,sans-serif;letter-spacing:.02em;color:transparent!important;background:none!important;-webkit-text-fill-color:transparent!important;-webkit-text-stroke:1.25px #e8e5dc;text-shadow:none;transform:none;transition:transform .25s ease,-webkit-text-stroke-color .25s ease}
+.contact .contact-word-note{transform:rotate(2deg)}
+.contact .contact-word-note:before{display:none}
+.contact .contact-word-note:after{content:'';position:absolute;left:3%;right:0;bottom:-7px;height:2px;background:#ed806b;border-radius:50%;transform:rotate(-3deg);transition:transform .25s ease,width .25s ease}
+.contact .contact-word-note .contact-dot{color:transparent!important;-webkit-text-fill-color:transparent!important;-webkit-text-stroke:1.25px #e8e5dc}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{transform:translate(2px,-2px) rotate(28deg)}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateX(1px)}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translate(2px,1px) rotate(2deg)}
+.contact .contact-title-trigger:hover .contact-word-note:after,.contact .contact-title-trigger:focus-visible .contact-word-note:after,.contact .contact-title-trigger.greeting .contact-word-note:after{transform:rotate(-3deg) translateX(2px)}
+@media(max-width:700px){.contact .contact-title-trigger{padding-right:17px}.contact .contact-word,.contact .contact-word-note{font-size:clamp(30px,8vw,42px);-webkit-text-stroke-width:1px}}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note,.contact .contact-word-note:after{transition:none}}
+
+/* Contact title v6: solid warm ivory lettering. */
+.contact .contact-title-trigger{gap:.16em;padding:8px 20px 11px 0;letter-spacing:.01em}
+.contact .contact-title-trigger:before{display:none}
+.contact .contact-word,.contact .contact-word-note{color:#e8e5dc!important;background:none!important;-webkit-text-fill-color:#e8e5dc!important;-webkit-text-stroke:0!important;letter-spacing:.01em;text-shadow:none}
+.contact .contact-word-note{transform:rotate(1deg)}
+.contact .contact-word-note:after{display:none}
+.contact .contact-word-note .contact-dot{color:#e8e5dc!important;-webkit-text-fill-color:#e8e5dc!important;-webkit-text-stroke:0!important}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translate(2px,1px) rotate(1deg)}
+
+/* Keep the four glyphs consistently ivory in every interaction state. */
+.contact .contact-title-trigger,
+.contact .contact-title-trigger:hover,
+.contact .contact-title-trigger:focus-visible,
+.contact .contact-title-trigger.greeting,
+.contact .contact-word,
+.contact .contact-word-note,
+.contact .contact-dot{color:#e8e5dc!important;background:none!important;-webkit-text-fill-color:#e8e5dc!important;-webkit-text-stroke:0!important;text-shadow:none!important}
+
+/* Contact title v4: visible two-word lettering, related to Works but distinct. */
+.contact .contact-title-trigger{all:unset;position:relative;display:inline-flex;align-items:baseline;gap:.12em;padding:8px 24px 13px 0;cursor:pointer;line-height:.9;letter-spacing:-.08em;transition:transform .25s ease}
+.contact .contact-title-trigger:before{content:'';position:absolute;left:1px;bottom:5px;width:38px;height:2px;background:#d8a5c4;border-radius:99px;transform:rotate(-4deg);transition:width .25s ease}
+.contact .contact-title-trigger:after{content:'✦';position:absolute;right:0;top:0;color:#d7df83;font:12px/1 Arial;transform:rotate(10deg);transition:transform .25s ease}
+.contact .contact-word,.contact .contact-word-note{all:unset;display:inline-block;font:800 clamp(38px,5vw,58px)/.9 Arial,sans-serif;letter-spacing:-.08em;transform:rotate(-3deg);transition:transform .3s cubic-bezier(.2,.9,.25,1.3);-webkit-text-stroke:0;text-shadow:none;background:none!important;background-clip:border-box!important;-webkit-background-clip:border-box!important;-webkit-text-fill-color:initial!important}
+.contact .contact-word{color:#ff806c!important}
+.contact .contact-word-note{color:#f1efe7!important;transform:translateY(3px) rotate(3deg)}
+.contact .contact-word-note:before{display:none}
+.contact .contact-dot{color:#d8a5c4!important}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{width:55px}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{transform:translate(2px,-2px) rotate(28deg)}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateY(-3px) rotate(-6deg)}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateY(1px) rotate(5deg)}
+@media(max-width:700px){.contact .contact-title-trigger{padding-right:18px}.contact .contact-word,.contact .contact-word-note{font-size:clamp(30px,8vw,42px)}}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:before,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note{transition:none}}
+
+/* Contact title v3: simple, playful, and never covering the glyphs. */
+.contact .contact-title-trigger{all:unset;position:relative;display:inline-flex;align-items:baseline;gap:.16em;padding:8px 20px 12px 0;cursor:pointer;line-height:.92;letter-spacing:-.07em;transition:transform .22s ease}
+.contact .contact-title-trigger:before{content:'';position:absolute;left:0;bottom:4px;width:32px;height:2px;background:linear-gradient(90deg,#ff927c,#c9a9dc);border-radius:99px;transform:rotate(-3deg);transition:width .22s ease}
+.contact .contact-title-trigger:after{content:'•';position:absolute;right:1px;top:2px;color:#c9a9dc;font:16px/1 Arial;transform:rotate(10deg);transition:transform .22s ease}
+.contact .contact-word,.contact .contact-word-note{all:unset;display:inline-block;font:800 clamp(38px,5vw,58px)/.92 Arial,sans-serif;letter-spacing:-.07em;color:transparent;background:linear-gradient(120deg,#ff7d68 0%,#ffb08e 48%,#d1b2df 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:0;text-shadow:none;transform:none;transition:transform .22s ease}
+.contact .contact-word-note{background:linear-gradient(120deg,#e5c0df 0%,#b4c6d9 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.contact .contact-word-note:before{display:none}
+.contact .contact-dot{color:#d5a8d9;-webkit-text-fill-color:#d5a8d9}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{width:48px}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{transform:translate(2px,-2px) rotate(35deg)}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateX(1px)}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateX(2px)}
+@media(max-width:700px){.contact .contact-title-trigger{padding-right:17px}.contact .contact-word,.contact .contact-word-note{font-size:clamp(30px,8vw,42px)}}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:before,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note{transition:none}}
+
+/* Contact title v2: transparent editorial lettering, independent of the old accent treatments. */
+.contact .contact-title-trigger{all:unset;position:relative;display:inline-flex;align-items:baseline;gap:.18em;padding:18px 32px 15px 1px;cursor:pointer;isolation:isolate;line-height:.9;letter-spacing:-.08em;transition:letter-spacing .3s ease,transform .3s ease}
+.contact .contact-title-trigger:before{content:'04 / CONTACT';position:absolute;left:2px;top:0;color:#8a94a3;font:8px/1 monospace;letter-spacing:.16em;transform:none;width:auto;height:auto;background:none;opacity:1;transition:color .25s ease}
+.contact .contact-title-trigger:after{content:'';position:absolute;right:0;top:8px;width:20px;height:1px;background:linear-gradient(90deg,#9aa8bf,transparent);transform:rotate(-28deg);transition:width .3s ease,background .3s ease}
+.contact .contact-word,.contact .contact-word-note{all:unset;display:inline-block;font:800 clamp(38px,5vw,58px)/.9 Arial,sans-serif;letter-spacing:-.08em;color:transparent;background:linear-gradient(135deg,#e4e8ed 0%,#aab7c9 48%,#9b8fc2 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:1px #aab4c2;text-shadow:none;transform:none;transition:transform .3s ease,-webkit-text-stroke-color .3s ease,background-position .3s ease}
+.contact .contact-word-note{background:linear-gradient(135deg,#d5dbe5 0%,#9ca9bf 45%,#7d729f 100%);background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke-color:#8f9aad}
+.contact .contact-word-note:before{display:none}
+.contact .contact-dot{color:#b9a8d8;-webkit-text-fill-color:#b9a8d8}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{letter-spacing:-.055em;transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{color:#b8c3d0}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{width:34px;background:linear-gradient(90deg,#b9a8d8,transparent)}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateY(-1px)}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateY(1px)}
+@media(max-width:700px){.contact .contact-title-trigger{padding-top:16px;padding-right:24px}.contact .contact-word,.contact .contact-word-note{font-size:clamp(30px,8vw,42px)}}
+@media(prefers-reduced-motion:reduce){.contact .contact-title-trigger,.contact .contact-title-trigger:before,.contact .contact-title-trigger:after,.contact .contact-word,.contact .contact-word-note{transition:none}}
+
+/* Editorial wordmark: solid first word, calm outlined second word. */
+.contact .contact-title-trigger{gap:9px;padding:8px 12px 14px 4px;color:var(--orange);background:none;font-size:clamp(38px,5vw,58px);font-weight:800;letter-spacing:-.08em;line-height:.95}
+.contact .contact-title-trigger:before{left:5px;right:auto;bottom:7px;width:30px;height:2px;background:var(--pink);opacity:.85;transform:rotate(-3deg);transition:left .3s ease,width .3s ease}
+.contact .contact-title-trigger:after{content:'✦';right:-1px;top:3px;bottom:auto;width:auto;height:auto;border-radius:0;background:none;color:var(--acid);font:11px/1 Arial;transform:rotate(12deg);transition:transform .25s ease}
+.contact .contact-word,.contact .contact-word-note{background:none!important;color:var(--orange);-webkit-text-stroke:0;text-shadow:none;padding:0;border:0;transform:none;transition:transform .25s ease,color .2s}
+.contact .contact-word-note{color:transparent;-webkit-text-stroke:1px #f1efe7}
+.contact .contact-title-trigger:hover,.contact .contact-title-trigger:focus-visible,.contact .contact-title-trigger.greeting{color:var(--orange);transform:translateY(-1px)}
+.contact .contact-title-trigger:hover:before,.contact .contact-title-trigger:focus-visible:before,.contact .contact-title-trigger.greeting:before{left:11px;width:45px}
+.contact .contact-title-trigger:hover:after,.contact .contact-title-trigger:focus-visible:after,.contact .contact-title-trigger.greeting:after{transform:translate(2px,-2px) rotate(35deg)}
+.contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateX(1px)}
+.contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateX(2px);color:transparent}
 </style>
