@@ -22,6 +22,7 @@ const pokeSticker = () => { stickerMood.value = (stickerMood.value + 1) % moods.
 const doodleMood = ref(0)
 const doodleMessages = ['点我一下', '嗨！一起玩呀', '灵感 +1 ✦']
 let observer
+let cardObserver
 let pointerFrame
 let stopWorkPreparation
 let stopModelPreparation
@@ -54,11 +55,26 @@ const resetAbout = () => {
 }
 onMounted(()=>{ observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('show');observer.unobserve(entry.target)}}),{threshold:.12}); document.querySelectorAll('.reveal').forEach(el=>observer.observe(el)) })
 onUnmounted(()=>observer?.disconnect())
+onMounted(() => {
+  if (matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return
+  cardObserver = new IntersectionObserver(entries => {
+    entries.forEach(entry => {
+      if (!entry.isIntersecting) return
+      entry.target.classList.remove('card-awaiting')
+      cardObserver.unobserve(entry.target)
+    })
+  }, { threshold: .12 })
+  document.querySelectorAll('#work .card').forEach(card => {
+    card.classList.add('card-scroll-reveal', 'card-awaiting')
+    cardObserver.observe(card)
+  })
+})
+onUnmounted(() => cardObserver?.disconnect())
 </script>
 <template>
   <div class="site">
     <header class="top wrap">
-      <a class="logo" href="#top">LUXI<b>XI</b><i>✳</i></a>
+      <a class="logo" href="#top" aria-label="LUXIXI 首页">LUXI<b>XI</b><svg class="logo-star" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2v20M2 12h20M5 5l14 14M5 19L19 5" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg></a>
       <nav>
         <a href="#about">ABOUT</a>
         <a href="#work">WORKS</a>
@@ -140,8 +156,8 @@ onUnmounted(()=>observer?.disconnect())
         </div>
       </section>
       <VisualGallery />
-      <section id="work" class="work wrap reveal">
-        <div class="work-head">
+      <section id="work" class="work wrap">
+        <div class="work-head reveal">
           <div class="work-title-group">
             <div class="label">
               03 / SELECTED WORKS
@@ -208,6 +224,11 @@ onUnmounted(()=>observer?.disconnect())
   </div>
 </template>
 <style scoped>
+.cards .card-scroll-reveal{transition:opacity .7s ease,translate .7s cubic-bezier(.2,.7,.2,1),transform .35s cubic-bezier(.2,.8,.2,1),border-color .25s,box-shadow .35s}
+.cards .card-awaiting{opacity:0;translate:0 32px}
+.cards .card-awaiting:focus-visible{opacity:1;translate:0 0}
+@media(prefers-reduced-motion:reduce){.cards .card-scroll-reveal{opacity:1;translate:none;transition:none}}
+.logo-star{display:inline-block;width:20px;height:20px;margin-left:3px;vertical-align:-2px;color:var(--orange)}
 .mobile-hero-actions,.mobile-doodle{display:none}
 @media(max-width:700px){
   .site .hero{height:auto;min-height:calc(85svh - 68px);padding-block:92px 100px;align-items:start}
@@ -252,7 +273,16 @@ onUnmounted(()=>observer?.disconnect())
     padding-block: 80px;
   }
 
-  .hero .sticker-eye,
+  .hero .sticker-eye {
+    display: block;
+    left: 24px;
+    right: auto;
+    top: 14px;
+    transform: scale(.72) rotate(-9deg);
+    transform-origin: top left;
+  }
+  .hero .sticker-eye.mood-1 { animation: mobile-eye-poke .45s; }
+
   .hero .sticker-ticket,
   .copy .mini-sticker-note {
     display: none;
@@ -269,4 +299,6 @@ onUnmounted(()=>observer?.disconnect())
   }
 
 }
+@keyframes mobile-eye-poke{50%{transform:scale(.8) rotate(5deg)}}
+@media(max-width:700px) and (prefers-reduced-motion:reduce){.hero .sticker-eye.mood-1{animation:none}}
 </style>
