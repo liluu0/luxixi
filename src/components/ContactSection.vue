@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onUnmounted } from 'vue'
+import { contactApi } from '../api/contactApi'
 const copied = ref('')
 const feedback = ref('')
 const message = ref('')
 const previewed = ref(false)
+const submitting = ref(false)
+const toast = ref('')
 const contactMode = ref(0)
 const contactModes = ['SIGNAL OPEN', 'READY TO CHAT', 'SEND A WAVE']
 const runnerPlaying = ref(false)
@@ -14,6 +17,12 @@ const greet = () => {
   runnerTimer = setTimeout(() => { runnerPlaying.value = false }, 800)
 }
 let timer
+let toastTimer
+const showToast = (text) => {
+  clearTimeout(toastTimer)
+  toast.value = text
+  toastTimer = setTimeout(() => { toast.value = '' }, 2600)
+}
 const copy = async (value, key) => {
   clearTimeout(timer)
   try {
@@ -23,12 +32,21 @@ const copy = async (value, key) => {
     timer = setTimeout(() => { copied.value = ''; feedback.value = '' }, 1800)
   } catch { copied.value = ''; feedback.value = '复制失败，请选中内容手动复制' }
 }
-onUnmounted(() => { clearTimeout(timer); clearTimeout(runnerTimer) })
-const submit = () => { previewed.value = true }
+onUnmounted(() => { clearTimeout(timer); clearTimeout(runnerTimer); clearTimeout(toastTimer) })
+const submit = async (event) => {
+  const form = event.currentTarget
+  const visitorName = form.visitorName.value.trim()
+  if (!visitorName || !message.value.trim()) { previewed.value = false; showToast('请填写留言人和留言内容'); return }
+  submitting.value = true
+  try { await contactApi.create({ visitorName, message: message.value.trim() }); previewed.value = true; showToast('留言已提交，感谢你的留言'); form.reset(); message.value = '' }
+  catch (error) { previewed.value = false; showToast(error.message) }
+  finally { submitting.value = false }
+}
 
 </script>
 <template>
 <section id="contact" class="contact wrap reveal" :class="{ 'contact-ping': contactMode > 0 }" aria-labelledby="contact-title">
+    <Transition name="toast"><p v-if="toast" class="contact-toast" role="status" aria-live="polite">{{ toast }}</p></Transition>
     <span class="contact-orbit orbit-one" aria-hidden="true"/><span class="contact-orbit orbit-two" aria-hidden="true"/>
     <div>
       <div class="label">04 / CONTACT</div>
@@ -49,8 +67,7 @@ const submit = () => { previewed.value = true }
       <label for="visitor-message">留言内容</label>
       <textarea id="visitor-message" v-model="message" name="message" rows="6" maxlength="2000" placeholder="想聊的项目或想法"></textarea>
       <span class="message-count">{{ message.length }} / 2000</span>
-      <button type="submit">查看留言状态 ↗</button>
-      <p class="form-note" role="status">{{ previewed ? '留言未发送，也未保存。欢迎通过 QQ 或邮箱联系我。' : '留言暂未开放' }}</p>
+      <button type="submit" :disabled="submitting">{{ submitting ? '提交中…' : '提交留言 ↗' }}</button>
     </form>
   </section>
 </template>
@@ -81,6 +98,8 @@ button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
 .contact-title-trigger:hover,.contact-title-trigger:focus-visible,.contact-title-trigger.active{background:transparent;color:var(--acid);transform:translate(5px,-3px) rotate(-2deg)}
 .contact-title-trigger:focus-visible{outline:2px solid var(--acid);outline-offset:7px}
 .contact{position:relative;overflow:hidden}
+.contact-toast{position:fixed;z-index:20;top:24px;left:50%;margin:0;transform:translateX(-50%);padding:11px 18px;border:1px solid #8c9c65;border-radius:999px;background:#20291b;color:var(--acid);box-shadow:0 8px 28px #0006;font-size:12px;white-space:nowrap;pointer-events:none}
+.toast-enter-active,.toast-leave-active{transition:opacity .22s ease,transform .22s ease}.toast-enter-from,.toast-leave-to{opacity:0;transform:translate(-50%,-10px)}
 .contact-orbit{position:absolute;border:1px solid #31422d;border-radius:50%;pointer-events:none;opacity:.5}.orbit-one{width:180px;height:180px;right:8%;top:8%;animation:orbit 16s linear infinite}.orbit-two{width:90px;height:90px;right:18%;top:22%;border-color:#546d2d;animation:orbit 10s linear reverse infinite}.orbit-two:after{content:"";position:absolute;width:6px;height:6px;background:var(--acid);border-radius:50%;top:-3px;left:50%;box-shadow:0 0 14px var(--acid)}
 @keyframes orbit{to{transform:rotate(360deg)}}
 @keyframes contact-badge-pulse{50%{box-shadow:0 0 0 7px #d8ff3610,0 0 20px #d8ff3630;transform:rotate(-4deg) scale(1.04)}}
@@ -253,3 +272,4 @@ button:focus-visible{outline:2px solid var(--acid);outline-offset:4px}
 .contact .contact-title-trigger:hover .contact-word:first-child,.contact .contact-title-trigger:focus-visible .contact-word:first-child,.contact .contact-title-trigger.greeting .contact-word:first-child{transform:translateX(1px)}
 .contact .contact-title-trigger:hover .contact-word-note,.contact .contact-title-trigger:focus-visible .contact-word-note,.contact .contact-title-trigger.greeting .contact-word-note{transform:translateX(2px);color:transparent}
 </style>
+
