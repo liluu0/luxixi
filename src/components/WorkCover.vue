@@ -1,11 +1,10 @@
 <script setup>
-import { previewUrl } from './sanctuary/assets'
 defineProps({ kind: { type: String, required: true } })
 </script>
 
 <template>
   <div class="work-cover" :class="`cover-${kind}`" aria-hidden="true">
-    <img v-if="kind === 'temple'" class="temple-render" :src="previewUrl" alt="" loading="lazy"><img v-else-if="['anatomy','city','castle','brain','archive','werewolf','more'].includes(kind)" class="card-render" :src="`/assets/stickers/${kind}-card.webp`" alt="" loading="lazy"><svg v-else viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <img v-if="['temple','anatomy','city','castle','brain','archive','werewolf','more'].includes(kind)" class="card-render" :src="`/assets/stickers/${kind}-card.webp`" alt="" loading="lazy"><svg v-else viewBox="0 0 700 440" fill="none" xmlns="http://www.w3.org/2000/svg">
       <g class="cover-guides" stroke="currentColor" stroke-width=".6" opacity=".15">
         <path v-for="n in 12" :key="`v${n}`" :d="`M${n * 60} 0V440`" />
         <path v-for="n in 7" :key="`h${n}`" :d="`M0 ${n * 60}H700`" />

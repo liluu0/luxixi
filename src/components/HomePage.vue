@@ -157,16 +157,6 @@ onUnmounted(()=>observer?.disconnect())
           </div>
         </div>
         <div class="cards">
-          <a class="card c3" href="/works/anatomy-visualizer" @click.prevent="onOpenAnatomy">
-            <WorkCover kind="anatomy" />
-            <span class="tag">3D / MODELING</span>
-            <h3>人体结构<br>分解可视化 <span class="arrow">↗</span></h3>
-          </a>
-          <a class="card data-card" href="/works/city-heatmap" @click.prevent="onOpen">
-            <WorkCover kind="city" />
-            <span class="tag">DATA / CITY PULSE</span>
-            <h3>城市热力<br>脉冲实验室 <span class="arrow">↗</span></h3>
-          </a>
           <a class="card temple-card" href="/works/lake-sanctuary" @click.prevent="onOpenSanctuary">
             <WorkCover kind="temple" />
             <span class="tag">3D / MODELING · EXPLORE</span>
@@ -176,6 +166,16 @@ onUnmounted(()=>observer?.disconnect())
             <WorkCover kind="castle" />
             <span class="tag">GAME / PLAY</span>
             <h3>古堡战斗<br>小游戏</h3>
+          </a>
+          <a class="card data-card" href="/works/city-heatmap" @click.prevent="onOpen">
+            <WorkCover kind="city" />
+            <span class="tag">DATA / CITY PULSE</span>
+            <h3>城市热力<br>脉冲实验室 <span class="arrow">↗</span></h3>
+          </a>
+          <a class="card c3" href="/works/anatomy-visualizer" @click.prevent="onOpenAnatomy">
+            <WorkCover kind="anatomy" />
+            <span class="tag">3D / MODELING</span>
+            <h3>人体结构<br>分解可视化 <span class="arrow">↗</span></h3>
           </a>
           <a class="card c5" href="/works/brain-games" @click.prevent="onOpenBrain">
             <WorkCover kind="brain" />
