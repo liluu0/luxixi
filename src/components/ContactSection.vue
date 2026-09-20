@@ -21,7 +21,7 @@ const copy = async (value, key) => {
     copied.value = key
     feedback.value = '已复制到剪贴板'
     timer = setTimeout(() => { copied.value = ''; feedback.value = '' }, 1800)
-  } catch { copied.value = ''; feedback.value = '复制失败，请选中号码手动复制' }
+  } catch { copied.value = ''; feedback.value = '复制失败，请选中内容手动复制' }
 }
 onUnmounted(() => { clearTimeout(timer); clearTimeout(runnerTimer) })
 const submit = () => { previewed.value = true }
@@ -35,9 +35,9 @@ const submit = () => { previewed.value = true }
       <div class="contact-title-row"><h2 id="contact-title"><button type="button" class="contact-title-trigger" :class="{ greeting: runnerPlaying }" aria-label="保持联系，和小怪打个招呼" @click="greet"><span class="contact-word">保持</span><span class="contact-word contact-word-note">联系<span class="contact-dot">。</span></span></button></h2><span :key="contactMode" class="contact-badge" aria-hidden="true">{{ contactModes[contactMode].split(' ')[0] }}<br>{{ contactModes[contactMode].split(' ').slice(1).join(' ') }}</span><button type="button" class="runner-button" :class="{ playing: runnerPlaying }" aria-label="和独眼小怪打招呼" @click="greet"><img class="contact-runner" src="/assets/stickers/01-one-eyed-runner.svg" alt=""><span aria-hidden="true">HEY!</span></button></div>
       <p :key="contactMode" class="contact-status" role="status">{{ contactModes[contactMode] }} <span>· 点一下，打个招呼</span></p>
       <dl class="contact-details">
-        <div><dt>QQ</dt><dd><span>3129830832</span><button class="copy" type="button" @click="copy('3129830832','qq')">{{ copied === 'qq' ? '已复制' : '复制' }}</button></dd></div>
-        <div><dt>微信</dt><dd><span>a15707473356</span><button class="copy" type="button" @click="copy('a15707473356','wechat')">{{ copied === 'wechat' ? '已复制' : '复制' }}</button></dd></div>
-        <div><dt>邮箱</dt><dd><a href="mailto:3129830832@qq.com">3129830832@qq.com</a></dd></div>
+        <div><dt>姓名</dt><dd><span>露西西</span></dd></div>
+        <div><dt>QQ</dt><dd><span>3129830832</span><button class="copy" type="button" aria-label="复制 QQ 号码" @click="copy('3129830832','qq')">{{ copied === 'qq' ? '已复制' : '复制' }}</button></dd></div>
+        <div><dt>邮箱</dt><dd><a href="mailto:3129830832@qq.com">3129830832@qq.com</a><button class="copy" type="button" aria-label="复制邮箱地址" @click="copy('3129830832@qq.com','email')">{{ copied === 'email' ? '已复制' : '复制' }}</button></dd></div>
         <div><dt>博客</dt><dd><a href="https://blog.csdn.net/qq_62541773?type=lately" target="_blank" rel="noopener noreferrer">CSDN 博客 ↗</a></dd></div>
       </dl>
       <p class="copy-feedback" role="status">{{ feedback }}</p>
@@ -50,7 +50,7 @@ const submit = () => { previewed.value = true }
       <textarea id="visitor-message" v-model="message" name="message" rows="6" maxlength="2000" placeholder="想聊的项目或想法"></textarea>
       <span class="message-count">{{ message.length }} / 2000</span>
       <button type="submit">查看留言状态 ↗</button>
-      <p class="form-note" role="status">{{ previewed ? '留言未发送，也未保存。欢迎通过 QQ、微信或邮箱联系我。' : '留言暂未开放' }}</p>
+      <p class="form-note" role="status">{{ previewed ? '留言未发送，也未保存。欢迎通过 QQ 或邮箱联系我。' : '留言暂未开放' }}</p>
     </form>
   </section>
 </template>
