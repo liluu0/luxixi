@@ -6,6 +6,9 @@
 .cards .c2{background:repeating-linear-gradient(45deg,#222034 0 14px,#493e65 15px 16px)}
 .cards .c4{background:#603026}
 .cards .c7{background:linear-gradient(145deg,#241c2d,#3c2942,#171923)}
+.cards .c7{grid-column:span 7}
+.cards .c6{grid-column:span 5;background:#272b27}
+.cards .card.c7,.cards .card.c6{grid-column:1 / -1}
 .cards .temple-card{background:linear-gradient(145deg,#132c32,#283c43,#11191f)}
 .card{min-width:0}
 .card h3{font-size:48px;line-height:1.15;letter-spacing:0;overflow-wrap:anywhere}
