@@ -2,13 +2,15 @@ import * as THREE from 'three'
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js'
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js'
+import { mergeGeometries } from 'three/addons/utils/BufferGeometryUtils.js'
 import level from './level.json'
 import { createInterior } from './interior.js'
-import { createEntrance } from './entrance.js'
+
 
 const BASE_URL = import.meta.env.BASE_URL
-const ASSET_URL = `${BASE_URL}assets/castle-battle/castle-sanctuary-lite.glb`
+const ASSET_URL = `${BASE_URL}assets/castle-battle/aurelia-sanctuary-v4.glb`
 const DRACO_URL = `${BASE_URL}assets/castle-battle/draco/`
+const COURTYARD_AREAS = level.courtyardAreas?.length ? level.courtyardAreas : [level.arena]
 
 const sourceName = (object) => object.name.replaceAll('_', ' ')
 
@@ -33,8 +35,56 @@ function configureMaterial(material) {
     'alpine foliage': 0x374d3a,
     'clipped box hedges': 0x465a3d,
     'tree bark': 0x50453e,
+    'v3 leaf replacement green': 0x35533a,
+    'v4 lawn | layered natural turf': 0x365c38,
+    'v4 lawn | fine grass blades': 0x416a3d,
+    'v4 ground support | rich garden soil': 0x44392d,
   }
   if (colors[name]) material.color.setHex(colors[name])
+  if (name.includes('layered natural turf')) {
+    material.roughness = 0.96
+    material.metalness = 0
+    // The turf sits only millimetres above several stone/soil support meshes.
+    // Pull its depth forward slightly so grazing camera angles remain stable.
+    material.polygonOffset = true
+    material.polygonOffsetFactor = -2
+    material.polygonOffsetUnits = -2
+  }
+  if (name.includes('layered natural turf')) {
+    material.onBeforeCompile = (shader) => {
+      shader.uniforms.uTurfNoiseScale = { value: 0.42 }
+      shader.vertexShader = shader.vertexShader
+        .replace('varying vec3 vViewPosition;', 'varying vec3 vViewPosition;\nvarying vec3 vTurfWorldPosition;')
+        .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\n\tvTurfWorldPosition = (modelMatrix * vec4(transformed, 1.0)).xyz;')
+      shader.fragmentShader = shader.fragmentShader
+        .replace('varying vec3 vViewPosition;', 'varying vec3 vViewPosition;\nvarying vec3 vTurfWorldPosition;\nuniform float uTurfNoiseScale;')
+        .replace('#include <common>', `
+          #include <common>
+          float turfHash(vec2 p) {
+            p = fract(p * vec2(123.34, 345.45));
+            p += dot(p, p + 34.345);
+            return fract(p.x * p.y);
+          }
+          float turfNoise(vec2 p) {
+            vec2 i = floor(p);
+            vec2 f = fract(p);
+            f = f * f * (3.0 - 2.0 * f);
+            return mix(mix(turfHash(i), turfHash(i + vec2(1, 0)), f.x),
+                       mix(turfHash(i + vec2(0, 1)), turfHash(i + vec2(1, 1)), f.x), f.y);
+          }
+        `)
+        .replace('#include <color_fragment>', `
+          #include <color_fragment>
+          float turfPatch = turfNoise(vTurfWorldPosition.xz * uTurfNoiseScale);
+          float turfGrain = turfNoise(vTurfWorldPosition.xz * 7.5);
+          diffuseColor.rgb *= 0.7 + turfPatch * 0.38 + turfGrain * 0.1;
+          float dryTip = smoothstep(0.72, 0.94, turfNoise(vTurfWorldPosition.xz * 2.3 + 11.0));
+          diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * vec3(1.12, 1.04, 0.78), dryTip * 0.22);
+        `)
+    }
+    material.customProgramCacheKey = () => 'castle-turf-world-noise-v1'
+    material.needsUpdate = true
+  }
   if (name.includes('bronze')) {
     material.metalness = 0.65
     material.roughness = 0.42
@@ -203,32 +253,76 @@ function triangleGeometry(mesh, predicate) {
   return geometry
 }
 
-function walkableSurface(a, b, c, normal) {
-  if (normal.y < 0.7) return false
-  const yMin = Math.min(a.y, b.y, c.y)
-  const yMax = Math.max(a.y, b.y, c.y)
-  return yMin >= 9.5 && yMax <= 10.76 && Math.max(Math.abs(a.x), Math.abs(b.x), Math.abs(c.x)) <= 33
-}
-
-function outsideCourtyard(a, b, c) {
-  const x = (a.x + b.x + c.x) / 3
-  const z = (a.z + b.z + c.z) / 3
-  return Math.abs(x) > 8.1 || z < -2.8 || z > 13.4
-}
-
 function disposeMaterial(material) {
   for (const value of Object.values(material)) if (value?.isTexture) value.dispose()
   material.dispose()
 }
 
+function insideCourtyard(x, z) {
+  return COURTYARD_AREAS.some(area => x >= area.minX && x <= area.maxX && z >= area.minZ && z <= area.maxZ)
+}
+
+function courtyardBoundaryObstacles() {
+  const xStops = [...new Set(COURTYARD_AREAS.flatMap(area => [area.minX, area.maxX]))].sort((a, b) => a - b)
+  const zStops = [...new Set(COURTYARD_AREAS.flatMap(area => [area.minZ, area.maxZ]))].sort((a, b) => a - b)
+  const segments = []
+  const epsilon = 0.01
+  const addSegment = (axis, coordinate, start, end, outward) => {
+    const previous = segments.at(-1)
+    if (previous && previous.axis === axis && previous.coordinate === coordinate
+      && previous.outward === outward && Math.abs(previous.end - start) < 1e-6) {
+      previous.end = end
+      return
+    }
+    segments.push({ axis, coordinate, start, end, outward })
+  }
+
+  for (const x of xStops) {
+    for (let index = 0; index < zStops.length - 1; index += 1) {
+      const start = zStops[index]
+      const end = zStops[index + 1]
+      const midpoint = (start + end) / 2
+      const negativeInside = insideCourtyard(x - epsilon, midpoint)
+      const positiveInside = insideCourtyard(x + epsilon, midpoint)
+      if (negativeInside !== positiveInside) addSegment('x', x, start, end, positiveInside ? -1 : 1)
+    }
+  }
+  for (const z of zStops) {
+    for (let index = 0; index < xStops.length - 1; index += 1) {
+      const start = xStops[index]
+      const end = xStops[index + 1]
+      const midpoint = (start + end) / 2
+      const negativeInside = insideCourtyard(midpoint, z - epsilon)
+      const positiveInside = insideCourtyard(midpoint, z + epsilon)
+      if (negativeInside !== positiveInside) addSegment('z', z, start, end, positiveInside ? -1 : 1)
+    }
+  }
+
+  return segments.map((segment, index) => {
+    const length = segment.end - segment.start
+    const midpoint = (segment.start + segment.end) / 2
+    return {
+      id: `arenaBoundary${index + 1}`,
+      type: 'box',
+      position: segment.axis === 'x'
+        ? [segment.coordinate + segment.outward * 0.4, 12, midpoint]
+        : [midpoint, 12, segment.coordinate + segment.outward * 0.4],
+      size: segment.axis === 'x' ? [0.5, 6, length + 1] : [length + 1, 6, 0.5],
+    }
+  })
+}
+
 function obstacleCopies() {
-  return level.obstacles.map((obstacle) => ({
+  const obstacles = level.obstacles.map(obstacle => ({
     id: obstacle.id,
     type: obstacle.type,
     position: [...obstacle.position],
     ...(obstacle.rotation ? { rotation: obstacle.rotation } : {}),
-    ...(obstacle.type === 'box' ? { size: [...obstacle.size] } : { radius: obstacle.radius, height: obstacle.height }),
+    ...(obstacle.type === 'box'
+      ? { size: [...obstacle.size] }
+      : { radius: obstacle.radius, height: obstacle.height }),
   }))
+  return [...obstacles, ...courtyardBoundaryObstacles()]
 }
 
 export async function loadEnvironment(scene, renderer, onProgress) {
@@ -243,12 +337,15 @@ export async function loadEnvironment(scene, renderer, onProgress) {
     gltf = await new Promise((resolve, reject) => loader.load(ASSET_URL, resolve, event => {
       onProgress?.(event.total ? event.loaded / event.total : 0.45)
     }, reject))
-  } finally {
-    draco.dispose()
-  }
+  } finally { draco.dispose() }
 
   const model = gltf.scene
   model.name = 'Aurelia castle sanctuary'
+  {
+    // v4 was authored at twice the gameplay scale. Bring the exported scene
+    // into the same metre-based coordinate frame as characters and physics.
+    model.scale.setScalar(0.5)
+  }
   model.updateMatrixWorld(true)
   const previous = {
     background: scene.background,
@@ -266,38 +363,25 @@ export async function loadEnvironment(scene, renderer, onProgress) {
   model.traverse((object) => {
     if (!object.isMesh) return
     const name = sourceName(object)
-    if (name.startsWith('Lake |')) {
+    if (name.startsWith('Lake |') || /fine blades/i.test(name)) {
+      // The exported blade triangles shimmer heavily at gameplay distance and
+      // also become thousands of tiny collision faces. The stable turf plane
+      // beneath them preserves the lawn silhouette without temporal flicker.
       detached.push(object)
       return
-    }
-    if (name.startsWith('Island vegetation')) {
-      const geometry = triangleGeometry(object, outsideCourtyard)
-      object.geometry.dispose()
-      object.geometry = geometry
-      object.position.set(0, 0, 0)
-      object.quaternion.identity()
-      object.scale.set(1, 1, 1)
-    }
-    const materialNames = (Array.isArray(object.material) ? object.material : [object.material])
-      .map(material => sourceName(material).toLowerCase()).join(' ')
-    if (/foliage|hedges|bark/.test(materialNames)) {
-      const geometry = triangleGeometry(object, (a, b, c) => {
-        const x = (a.x + b.x + c.x) / 3
-        const z = (a.z + b.z + c.z) / 3
-        return Math.abs(x - 7) > 1.55 || z < 4.7 || z > 7.9
-      })
-      object.geometry.dispose()
-      object.geometry = geometry
-      object.position.set(0, 0, 0)
-      object.quaternion.identity()
-      object.scale.set(1, 1, 1)
     }
     object.castShadow = /^(Western cathedral|Grand observatory|Grand rotunda|Armillary Fountain)/.test(name)
     object.receiveShadow = true
     if (Array.isArray(object.material)) object.material.forEach(configureMaterial)
     else configureMaterial(object.material)
-    if (level.groundMeshPrefixes.some((prefix) => name.startsWith(prefix))) {
-      const geometry = triangleGeometry(object, walkableSurface)
+    if (!(/water|glazing|foliage|hedges|bark|bronze|iron|lamp|lantern/i.test(object.material?.name || name))) {
+      const geometry = triangleGeometry(object, (a, b, c, normal) => {
+        const x = (a.x+b.x+c.x)/3, z = (a.z+b.z+c.z)/3
+        // Include walls spanning above the character, not only short triangles.
+        // Otherwise the follow camera passes through the native door and facade.
+        const nearPlayableArea = COURTYARD_AREAS.some(area => x >= area.minX-1 && x <= area.maxX+1 && z >= area.minZ-2 && z <= area.maxZ+1)
+        return nearPlayableArea && Math.max(a.y,b.y,c.y) >= 9.5 && Math.min(a.y,b.y,c.y) <= 18
+      })
       if (geometry.getAttribute('position').count) {
         const surface = new THREE.Mesh(geometry, surfaces)
         surface.name = `Walkable ${name}`
@@ -310,18 +394,50 @@ export async function loadEnvironment(scene, renderer, onProgress) {
     object.removeFromParent()
     object.geometry.dispose()
   }
+  // Thousands of Blender detail objects otherwise issue thousands of draw calls.
+  // Bake their world transforms once, after extracting physics geometry.
+  const batches = new Map()
+  const originals = []
+  model.traverse(object => {
+    if (!object.isMesh || Array.isArray(object.material)) return
+    let geometry = object.geometry.clone().applyMatrix4(object.matrixWorld)
+    if (geometry.index) { const flat = geometry.toNonIndexed(); geometry.dispose(); geometry = flat }
+    for (const key of Object.keys(geometry.attributes)) {
+      if (!['position', 'normal', 'uv'].includes(key)) geometry.deleteAttribute(key)
+    }
+    if (!geometry.attributes.normal) geometry.computeVertexNormals()
+    if (!geometry.attributes.uv) geometry.setAttribute('uv', new THREE.Float32BufferAttribute(new Float32Array(geometry.attributes.position.count * 2), 2))
+    const key = `${object.material.uuid}-${object.castShadow}`
+    if (!batches.has(key)) batches.set(key, { material: object.material, shadow: object.castShadow, geometries: [] })
+    batches.get(key).geometries.push(geometry)
+    originals.push(object)
+  })
+  for (const object of originals) object.removeFromParent()
+  const oldGeometries = new Set(originals.map(object => object.geometry))
+  oldGeometries.forEach(geometry => geometry.dispose())
+  // The batches contain world coordinates; undo the root scale on the batch group.
+  const mergedRoot = new THREE.Group()
+  mergedRoot.scale.setScalar(1 / model.scale.x)
+  model.add(mergedRoot)
+  for (const { material, shadow, geometries } of batches.values()) {
+    const geometry = mergeGeometries(geometries, false)
+    geometries.forEach(part => part.dispose())
+    const mesh = new THREE.Mesh(geometry, material)
+    mesh.name = `Merged ${material.name || 'castle material'}`
+    mesh.castShadow = shadow
+    mesh.receiveShadow = true
+    mergedRoot.add(mesh)
+  }
   const water = addWater(decoration)
   const environmentTarget = addLighting(scene, renderer, decoration)
   const interior = createInterior()
-  const entrance = createEntrance()
-  decoration.add(entrance.root)
   scene.add(interior.root)
   const outdoor = { background: scene.background, fog: scene.fog }
   let activeZone = 'courtyard'
 
   const raycaster = new THREE.Raycaster()
   const onGround = (point) => {
-    raycaster.set(new THREE.Vector3(point[0], 20, point[2]), new THREE.Vector3(0, -1, 0))
+    raycaster.set(new THREE.Vector3(point[0], 12, point[2]), new THREE.Vector3(0, -1, 0))
     const hit = raycaster.intersectObjects(groundMeshes, false)[0]
     return [point[0], hit ? hit.point.y + 0.015 : point[1], point[2]]
   }
@@ -329,14 +445,15 @@ export async function loadEnvironment(scene, renderer, onProgress) {
   let disposed = false
   return {
     model,
+    modelUrl: ASSET_URL,
     interior,
-    entrance: [6.7, 10.52, 6.7],
+    // Native rotunda door measured in the same half-scale frame as physics.
+    entrance: onGround(level.entrance),
     groundMeshes,
     spawn: onGround(level.spawn),
     enemySpawns: level.enemySpawns.map(onGround),
     obstacles: [
       ...obstacleCopies(),
-      { id: 'courtyardFoundation', type: 'box', position: [0, 9.9, 5], size: [15.6, 0.42, 15.6] },
       ...interior.obstacles,
     ],
     setZone(zone) {
@@ -354,14 +471,14 @@ export async function loadEnvironment(scene, renderer, onProgress) {
       if (activeZone === 'interior') interior.update(elapsedSeconds)
       else {
         water.material.normalMap.offset.set(elapsedSeconds * 0.003, elapsedSeconds * 0.0013)
-        entrance.update(elapsedSeconds)
+
       }
     },
     dispose() {
       if (disposed) return
       disposed = true
       interior.dispose()
-      entrance.dispose()
+
       const materials = new Set()
       const disposeObject = (object) => {
         if (!object.isMesh) return

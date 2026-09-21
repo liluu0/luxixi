@@ -1,7 +1,7 @@
 import * as THREE from 'three'
 import RAPIER from '@dimforge/rapier3d-compat'
 import { createKnight } from './actors.js'
-import { loadEnvironment } from './environment.js'
+import { loadEnvironment, level } from './environment.js'
 import { createBattleAudio } from './audio.js'
 import { protectedPosition } from './safety.js'
 
@@ -162,7 +162,7 @@ export async function createCastleGame(canvas, callbacks = {}) {
     zone = next
     player.zone = next
     target = null
-    yaw = next === 'interior' ? 0 : Math.PI
+    yaw = 0
     pitch = next === 'interior' ? 0.09 : 0.26
     const feet = next === 'interior' ? environment.interior.spawn : environment.entrance
     const translation = { x: feet[0], y: feet[1] + BODY_OFFSET, z: feet[2] }
@@ -193,7 +193,7 @@ export async function createCastleGame(canvas, callbacks = {}) {
     environment.setZone(zone)
     world.step()
     cameraTarget.copy(player.actor.root.position).add(new THREE.Vector3(0, 1.3, 0))
-    camera.position.copy(cameraTarget).add(new THREE.Vector3(0, 1.3, next === 'interior' ? 1.8 : -3))
+    camera.position.copy(cameraTarget).add(new THREE.Vector3(0, 1.3, next === 'interior' ? 1.8 : 3))
     travelCooldown = 0.8
     renderer.shadowMap.needsUpdate = true
     notify()
@@ -458,17 +458,17 @@ export async function createCastleGame(canvas, callbacks = {}) {
     const origin = unit.actor.root.position
     const direction = destination.clone().sub(origin)
     direction.y = 0
-    const pool = new THREE.Vector3(0, origin.y, 5)
+    const pool = new THREE.Vector3(level.fountainCenter[0], origin.y, level.fountainCenter[2])
     const length = direction.length()
     if (length < 0.01) return direction
     const line = direction.clone().normalize()
     const along = clamp(pool.clone().sub(origin).dot(line), 0, length)
     const closest = origin.clone().addScaledVector(line, along)
-    if (unit.zone === 'courtyard' && closest.distanceTo(pool) < 2.9 && along > 0.6 && length > 2.7) {
+    if (unit.zone === 'courtyard' && closest.distanceTo(pool) < 5.1 && along > 0.6 && length > 2.7) {
       const a = Math.atan2(origin.z - pool.z, origin.x - pool.x)
       const b = Math.atan2(destination.z - pool.z, destination.x - pool.x)
       const side = Math.sign(shortestAngle(a, b)) || (unit.index % 2 ? 1 : -1)
-      const waypoint = new THREE.Vector3(Math.cos(a + side * 0.65) * 3.55, origin.y, 5 + Math.sin(a + side * 0.65) * 3.55)
+      const waypoint = new THREE.Vector3(pool.x + Math.cos(a + side * 0.65) * 5.8, origin.y, pool.z + Math.sin(a + side * 0.65) * 5.8)
       direction.copy(waypoint).sub(origin)
     }
     for (const other of enemies) {
@@ -841,7 +841,32 @@ export async function createCastleGame(canvas, callbacks = {}) {
     notify()
     frame = requestAnimationFrame(draw)
     if (import.meta.env.DEV) {
-      window.__castleBattle = { canvas, snapshot: () => ({ phase, elapsed, kills, yaw, zone, tutorialStep, exploring,
+      const debugGroundRay = new THREE.Raycaster()
+      const groundAt = (position) => {
+        if (!Array.isArray(position) || position.length < 2) return null
+        const [x, z] = position.map(Number)
+        if (![x, z].every(Number.isFinite)) return null
+        debugGroundRay.set(new THREE.Vector3(x, 40, z), new THREE.Vector3(0, -1, 0))
+        const hit = debugGroundRay.intersectObjects(environment.groundMeshes, false)[0]
+        return hit ? { position: hit.point.toArray(), surface: hit.object.name } : null
+      }
+      const teleport = (position) => {
+        if (!player || !Array.isArray(position) || position.length < 3) return false
+        const [x, y, z] = position.map(Number)
+        if (![x, y, z].every(Number.isFinite)) return false
+        const translation = { x, y: y + BODY_OFFSET, z }
+        player.body.setTranslation(translation, true)
+        player.body.setNextKinematicTranslation(translation)
+        player.actor.root.position.set(x, y, z)
+        player.safePosition.copy(player.actor.root.position)
+        player.groundHeight = y
+        player.velocityY = 0
+        player.grounded = true
+        target = null
+        cameraTarget.copy(player.actor.root.position).add(new THREE.Vector3(0, 1.22, 0))
+        return true
+      }
+      window.__castleBattle = { canvas, teleport, groundAt, snapshot: () => ({ phase, elapsed, kills, yaw, zone, tutorialStep, exploring,
         interaction: nearbyDoor(), camera: camera.position.toArray(), renderer: { ...renderer.info.render },
         player: { position: player.actor.root.position.toArray(), health: player.health, stamina: player.stamina, potions: player.potions,
           grounded: player.grounded, jumpTime: player.jumpTime, velocityY: player.velocityY, canJump: canJump() },
