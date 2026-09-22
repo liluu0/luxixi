@@ -91,10 +91,7 @@ onUnmounted(() => cardObserver?.disconnect())
             / 个人档案 001 — 自由创作者
           </div>
           <h1>露<span>西西</span></h1>
-          <p><strong>我把好奇心做成可玩的东西。</strong><br>动画、三维、交互和一点点不合时宜的想象。</p>
-          <div class="mobile-hero-actions">
-            <a class="hero-work-link" href="#work">看看我的作品 ↗</a>
-          </div>
+          <p><strong>这里收集一些会动的灵感。</strong><br>动画、三维、交互，以及一些自由发挥。</p>
         </div>
         <div class="sticker-field" aria-label="首页装饰贴图">
           <button type="button" class="sticker sticker-eye" :class="`mood-${stickerMood}`" :aria-label="`贴纸状态：${moods[stickerMood]}，点击切换`" @click="pokeSticker">
@@ -229,16 +226,13 @@ onUnmounted(() => cardObserver?.disconnect())
 .cards .card-awaiting:focus-visible{opacity:1;translate:0 0}
 @media(prefers-reduced-motion:reduce){.cards .card-scroll-reveal{opacity:1;translate:none;transition:none}}
 .logo-star{display:inline-block;width:20px;height:20px;margin-left:3px;vertical-align:-2px;color:var(--orange)}
-.mobile-hero-actions,.mobile-doodle{display:none}
+.mobile-doodle{display:none}
 @media(max-width:700px){
   .site .hero{height:auto;min-height:calc(85svh - 68px);padding-block:92px 100px;align-items:start}
   .hero .content{width:100%;min-width:0}
   .hero h1{margin:24px 0 26px}
   .hero p{margin-left:8%;width:92%;max-width:310px;padding:12px 14px}
-  .mobile-hero-actions{display:flex;align-items:center;gap:18px;margin:22px 0 0 8%;pointer-events:auto;flex-wrap:wrap}
-  .mobile-hero-actions a{font:600 12px/1.5 'Microsoft YaHei',sans-serif;text-decoration:none;min-height:44px;display:inline-flex;align-items:center}
-  .hero-work-link{padding:0 14px;background:var(--acid);color:#11150d;border:1px solid var(--acid);box-shadow:4px 4px 0 var(--blue);transform:rotate(-2deg)}
-  .mobile-hero-actions a:focus-visible,.mobile-doodle:focus-visible{outline:2px solid var(--pink);outline-offset:5px}
+  .mobile-doodle:focus-visible{outline:2px solid var(--pink);outline-offset:5px}
   .hero .hero-doodle{display:none}
   .mobile-doodle{display:block;position:absolute;right:4%;top:180px;width:90px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;color:var(--ink)}
   .mobile-doodle img{display:block;width:100%;transition:transform .25s ease;filter:drop-shadow(4px 5px 0 #6057ff55)}

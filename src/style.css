@@ -65,7 +65,11 @@
 .stamp:hover{color:#111;border-color:var(--acid);transform:rotate(2deg) translateY(-4px);box-shadow:7px 8px 0 var(--pink)}
 .stamp:hover:before{transform:translateX(0)}
 .sticker-orbit:after{background:#fff}
-.curiosity-title span,.curiosity-title em{display:inline-block;transform-origin:left center;transition:transform .45s cubic-bezier(.2,.9,.25,1.4),filter .35s}.curiosity-title:hover span{transform:translateX(9px) rotate(-3deg);filter:drop-shadow(7px 7px 0 var(--blue))}.curiosity-title:hover em{transform:translateX(-7px) rotate(3deg);filter:drop-shadow(7px 7px 0 var(--pink))}
+.curiosity-title{line-height:1.04;letter-spacing:.015em}
+.curiosity-title span,.curiosity-title em{display:inline-block;transform-origin:left center;transition:transform .45s cubic-bezier(.2,.9,.25,1.4),filter .35s;background-size:100% 100%;background-clip:text;-webkit-background-clip:text;-webkit-text-fill-color:transparent;-webkit-text-stroke:1px rgba(244,240,223,.18)}
+.curiosity-title span{background-image:linear-gradient(180deg,var(--paper) 0%,var(--acid) 55%,var(--blue) 100%)}
+.curiosity-title em{margin-top:.06em;background-image:linear-gradient(180deg,var(--orange) 0%,var(--pink) 52%,var(--acid) 100%);-webkit-text-stroke-color:rgba(255,120,183,.28)}
+.curiosity-title:hover span{transform:translateX(5px) rotate(-2deg);filter:saturate(1.15) brightness(1.08)}.curiosity-title:hover em{transform:translateX(-4px) rotate(2deg);filter:saturate(1.15) brightness(1.08)}
 @media(prefers-reduced-motion:reduce){.curiosity-title span,.curiosity-title em{transition:none}.curiosity-title:hover span,.curiosity-title:hover em{transform:none}}
 
 .work-doodle{display:grid;place-items:center;overflow:visible}
