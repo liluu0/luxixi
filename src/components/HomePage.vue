@@ -228,10 +228,14 @@ onUnmounted(() => cardObserver?.disconnect())
 .logo-star{display:inline-block;width:20px;height:20px;margin-left:3px;vertical-align:-2px;color:var(--orange)}
 .mobile-doodle{display:none}
 @media(max-width:700px){
-  .site .hero{height:auto;min-height:calc(85svh - 68px);padding-block:92px 100px;align-items:start}
+  .site .hero{height:auto;min-height:calc(85svh - 68px);padding-block:92px 100px;align-items:center}
   .hero .content{width:100%;min-width:0}
   .hero h1{margin:24px 0 26px}
-  .hero p{margin-left:8%;width:92%;max-width:310px;padding:12px 14px}
+  .hero p{margin:84px 0 0 10%;width:84%;max-width:300px;padding:28px 8px 12px 22px;border:0;background:transparent;box-shadow:none;color:#c2c5bc;font:12px/1.85 "Microsoft YaHei","PingFang SC",sans-serif;letter-spacing:.045em;transform:rotate(-1deg)}
+  .hero p::before{content:'✦  灵感档案 / 001';position:absolute;left:22px;top:0;color:var(--acid);font:700 8px/1.2 monospace;letter-spacing:.18em;white-space:nowrap}
+  .hero p::after{content:'';position:absolute;left:0;top:25px;bottom:7px;width:2px;background:linear-gradient(180deg,var(--acid),var(--pink) 72%,transparent)}
+  .hero p strong{display:block;margin-bottom:3px;color:var(--paper);font-size:14px;letter-spacing:.025em}
+  .hero p br{display:none}
   .mobile-doodle:focus-visible{outline:2px solid var(--pink);outline-offset:5px}
   .hero .hero-doodle{display:none}
   .mobile-doodle{display:block;position:absolute;right:4%;top:180px;width:90px;padding:0;border:0;background:none;cursor:pointer;pointer-events:auto;color:var(--ink)}
