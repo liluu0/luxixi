@@ -4,7 +4,7 @@ import HomePage from './components/HomePage.vue'
 import { loadCityHeatmap, loadAnatomyVisualizer } from './workPageLoaders'
 
 const BrainGames = defineAsyncComponent(() => import('./components/BrainGames.vue'))
-const CastleBattle = defineAsyncComponent(() => import('./components/CastleBattle.vue'))
+const CastleBattle = () => import('./components/CastleBattle.vue')
 
 export const routePaths = {
   home: '/',
