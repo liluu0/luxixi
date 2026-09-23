@@ -6,6 +6,7 @@ import WorkCover from './WorkCover.vue'
 import VisualGallery from './VisualGallery.vue'
 import { prepareWorkPagesWhenIdle } from '../workPageLoaders'
 import { prepareAnatomyModel } from './anatomy/modelCache'
+defineOptions({ name: 'HomePage' })
 defineProps({
   onOpen: Function,
   onOpenAnatomy: Function,
