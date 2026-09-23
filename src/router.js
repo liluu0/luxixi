@@ -1,10 +1,6 @@
-import { defineAsyncComponent } from 'vue'
 import { createRouter, createWebHistory } from 'vue-router'
 import HomePage from './components/HomePage.vue'
-import { loadCityHeatmap, loadAnatomyVisualizer } from './workPageLoaders'
-
-const BrainGames = defineAsyncComponent(() => import('./components/BrainGames.vue'))
-const CastleBattle = () => import('./components/CastleBattle.vue')
+import WorkRouteShell from './components/WorkRouteShell.vue'
 
 export const routePaths = {
   home: '/',
@@ -15,16 +11,14 @@ export const routePaths = {
   lakeSanctuary: '/works/lake-sanctuary',
 }
 
-let navigationPromise
-function openWork(name, path) {
-  if (navigationPromise) return navigationPromise
-  navigationPromise = router.push({ name }).catch(error => {
-    // A stale or failed lazy chunk otherwise leaves the homepage looking inert.
-    console.error(`作品页面加载失败：${path}`, error)
-    if (window.location.pathname !== path) window.location.assign(path)
-  }).finally(() => { navigationPromise = null })
-  return navigationPromise
-}
+const openWork = name => router.push({ name })
+
+const workRoute = (path, name) => ({
+  path,
+  name,
+  component: WorkRouteShell,
+  props: { workId: name },
+})
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -34,42 +28,18 @@ const router = createRouter({
       name: 'home',
       component: HomePage,
       props: {
-        onOpen: () => openWork('city-heatmap', routePaths.cityHeatmap),
-        onOpenAnatomy: () => openWork('anatomy-visualizer', routePaths.anatomyVisualizer),
-        onOpenCastle: () => openWork('castle-battle', routePaths.castleBattle),
-        onOpenBrain: () => openWork('brain-games', routePaths.brainGames),
-        onOpenSanctuary: () => openWork('lake-sanctuary', routePaths.lakeSanctuary),
+        onOpen: () => openWork('city-heatmap'),
+        onOpenAnatomy: () => openWork('anatomy-visualizer'),
+        onOpenCastle: () => openWork('castle-battle'),
+        onOpenBrain: () => openWork('brain-games'),
+        onOpenSanctuary: () => openWork('lake-sanctuary'),
       },
     },
-    {
-      path: routePaths.cityHeatmap,
-      name: 'city-heatmap',
-      component: loadCityHeatmap,
-      props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
-    },
-    {
-      path: routePaths.anatomyVisualizer,
-      name: 'anatomy-visualizer',
-      component: loadAnatomyVisualizer,
-      props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
-    },
-    {
-      path: routePaths.castleBattle,
-      name: 'castle-battle',
-      component: CastleBattle,
-      props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
-    },
-    {
-      path: routePaths.brainGames,
-      name: 'brain-games',
-      component: BrainGames,
-      props: { onBack: () => router.push({ name: 'home', hash: '#work' }) },
-    },
-    {
-      path: routePaths.lakeSanctuary,
-      name: 'lake-sanctuary',
-      component: () => import('./components/LakeSanctuary.vue'),
-    },
+    workRoute(routePaths.cityHeatmap, 'city-heatmap'),
+    workRoute(routePaths.anatomyVisualizer, 'anatomy-visualizer'),
+    workRoute(routePaths.castleBattle, 'castle-battle'),
+    workRoute(routePaths.brainGames, 'brain-games'),
+    workRoute(routePaths.lakeSanctuary, 'lake-sanctuary'),
     { path: '/:pathMatch(.*)*', redirect: routePaths.home },
   ],
   scrollBehavior: to => to.hash ? { el: to.hash, top: 24 } : { left: 0, top: 0 },
